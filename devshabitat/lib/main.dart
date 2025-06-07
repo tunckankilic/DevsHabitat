@@ -1,6 +1,6 @@
-import 'package:devshabitat/core/config/firebase_options.dart';
+import 'package:devshabitat/core/config/firebase/firebase_options.dart';
 import 'package:devshabitat/core/injection/injection.dart';
-import 'package:devshabitat/config/routes/app_router.dart';
+import 'package:devshabitat/core/config/routes/app_router.dart';
 import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/core/services/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
