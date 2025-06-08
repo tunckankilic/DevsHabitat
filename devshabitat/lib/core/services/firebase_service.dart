@@ -13,7 +13,7 @@ class FirebaseService {
   FirebaseService._internal();
 
   final _logger = Logger();
-  final _internetChecker = InternetConnectionChecker();
+  final _internetChecker = InternetConnectionChecker.instance;
 
   late final FirebaseAuth _auth;
   late final FirebaseFirestore _firestore;

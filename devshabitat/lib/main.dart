@@ -1,6 +1,6 @@
-import 'package:devshabitat/core/config/firebase_options.dart';
+import 'package:devshabitat/core/config/firebase/firebase_options.dart';
 import 'package:devshabitat/core/injection/injection.dart';
-import 'package:devshabitat/config/routes/app_router.dart';
+import 'package:devshabitat/core/config/routes/app_router.dart';
 import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/core/services/firebase_service.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -24,7 +24,8 @@ void main() async {
 
   // Initialize Hydrated Bloc
   final storage = await HydratedStorage.build(
-    storageDirectory: await getTemporaryDirectory(),
+    storageDirectory:
+        HydratedStorageDirectory((await getTemporaryDirectory()).path),
   );
   HydratedBloc.storage = storage;
 
@@ -45,8 +46,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           title: 'DevHabitat',
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
+          theme: DevHabitatTheme.lightTheme,
+          darkTheme: DevHabitatTheme.darkTheme,
           themeMode: ThemeMode.system,
           routerConfig: AppRouter.router,
         );

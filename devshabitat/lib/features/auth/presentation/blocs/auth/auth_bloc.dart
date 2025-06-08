@@ -1,4 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:devshabitat/features/auth/domain/entities/user.dart';
@@ -15,6 +14,15 @@ abstract class AuthEvent extends Equatable {
 class AuthCheckRequested extends AuthEvent {}
 
 class AuthSignOutRequested extends AuthEvent {}
+
+class AuthUserChanged extends AuthEvent {
+  final User? user;
+
+  const AuthUserChanged(this.user);
+
+  @override
+  List<Object?> get props => [user];
+}
 
 // States
 abstract class AuthState extends Equatable {
@@ -55,14 +63,11 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   AuthBloc(this._authRepository) : super(AuthInitial()) {
     on<AuthCheckRequested>(_onAuthCheckRequested);
     on<AuthSignOutRequested>(_onAuthSignOutRequested);
+    on<AuthUserChanged>(_onAuthUserChanged);
 
     // Kullanıcı durumu değişikliklerini dinle
     _authRepository.userStream.listen((user) {
-      if (user != null) {
-        add(AuthCheckRequested());
-      } else {
-        emit(Unauthenticated());
-      }
+      add(AuthUserChanged(user));
     });
   }
 
@@ -101,6 +106,17 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       );
     } catch (e) {
       emit(AuthError(e.toString()));
+    }
+  }
+
+  void _onAuthUserChanged(
+    AuthUserChanged event,
+    Emitter<AuthState> emit,
+  ) {
+    if (event.user != null) {
+      emit(Authenticated(event.user!));
+    } else {
+      emit(Unauthenticated());
     }
   }
 

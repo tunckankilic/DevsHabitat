@@ -14,7 +14,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart'
     as _i973;
 import 'package:shared_preferences/shared_preferences.dart' as _i460;
 
-import '../../config/firebase/firebase_config.dart' as _i680;
+import '../config/firebase/firebase_config.dart' as _i680;
 import '../../shared/services/firebase_service.dart' as _i924;
 import '../../shared/services/storage_service.dart' as _i304;
 import '../network/api_client.dart' as _i557;
