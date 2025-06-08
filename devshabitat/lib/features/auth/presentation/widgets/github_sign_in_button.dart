@@ -23,8 +23,8 @@ class GitHubSignInButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
           ).copyWith(
-            elevation: MaterialStateProperty.all(0),
-            overlayColor: MaterialStateProperty.all(
+            elevation: WidgetStatePropertyAll(0),
+            overlayColor: WidgetStatePropertyAll(
               const Color(0xFF1B1F23).withOpacity(0.1),
             ),
           ),

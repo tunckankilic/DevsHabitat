@@ -26,6 +26,26 @@ class RegisterWithEmailAndPasswordRequested extends RegisterEvent {
   List<Object?> get props => [email, password, name];
 }
 
+class NextStepRequested extends RegisterEvent {
+  final Map<String, dynamic> formData;
+
+  const NextStepRequested(this.formData);
+
+  @override
+  List<Object?> get props => [formData];
+}
+
+class PreviousStepRequested extends RegisterEvent {}
+
+class FormDataUpdated extends RegisterEvent {
+  final Map<String, dynamic> formData;
+
+  const FormDataUpdated(this.formData);
+
+  @override
+  List<Object?> get props => [formData];
+}
+
 // States
 abstract class RegisterState extends Equatable {
   const RegisterState();
@@ -56,13 +76,71 @@ class RegisterFailure extends RegisterState {
   List<Object?> get props => [message];
 }
 
+class StepInitial extends RegisterState {
+  final int currentStep;
+  final Map<String, dynamic> formData;
+
+  const StepInitial({
+    this.currentStep = 0,
+    this.formData = const {},
+  });
+
+  @override
+  List<Object?> get props => [currentStep, formData];
+}
+
+class StepLoading extends RegisterState {
+  final int currentStep;
+  final Map<String, dynamic> formData;
+
+  const StepLoading({
+    required this.currentStep,
+    required this.formData,
+  });
+
+  @override
+  List<Object?> get props => [currentStep, formData];
+}
+
+class StepSuccess extends RegisterState {
+  final int currentStep;
+  final Map<String, dynamic> formData;
+
+  const StepSuccess({
+    required this.currentStep,
+    required this.formData,
+  });
+
+  @override
+  List<Object?> get props => [currentStep, formData];
+}
+
+class StepFailure extends RegisterState {
+  final String message;
+  final int currentStep;
+  final Map<String, dynamic> formData;
+
+  const StepFailure({
+    required this.message,
+    required this.currentStep,
+    required this.formData,
+  });
+
+  @override
+  List<Object?> get props => [message, currentStep, formData];
+}
+
 // BLoC
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   final AuthRepository _authRepository;
+  static const int totalSteps = 3;
 
-  RegisterBloc(this._authRepository) : super(RegisterInitial()) {
+  RegisterBloc(this._authRepository) : super(StepInitial()) {
     on<RegisterWithEmailAndPasswordRequested>(
         _onRegisterWithEmailAndPasswordRequested);
+    on<NextStepRequested>(_onNextStepRequested);
+    on<PreviousStepRequested>(_onPreviousStepRequested);
+    on<FormDataUpdated>(_onFormDataUpdated);
   }
 
   Future<void> _onRegisterWithEmailAndPasswordRequested(
@@ -82,6 +160,67 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       );
     } catch (e) {
       emit(RegisterFailure(e.toString()));
+    }
+  }
+
+  void _onNextStepRequested(
+    NextStepRequested event,
+    Emitter<RegisterState> emit,
+  ) {
+    if (state is StepInitial || state is StepSuccess) {
+      final currentState = state as dynamic;
+      final currentStep = currentState.currentStep;
+      final formData = Map<String, dynamic>.from(currentState.formData);
+      formData.addAll(event.formData);
+
+      if (currentStep < totalSteps - 1) {
+        emit(StepSuccess(
+          currentStep: currentStep + 1,
+          formData: formData,
+        ));
+      } else {
+        // Son adımda kayıt işlemini başlat
+        add(RegisterWithEmailAndPasswordRequested(
+          email: formData['email'] as String,
+          password: formData['password'] as String,
+          name: formData['name'] as String,
+        ));
+      }
+    }
+  }
+
+  void _onPreviousStepRequested(
+    PreviousStepRequested event,
+    Emitter<RegisterState> emit,
+  ) {
+    if (state is StepInitial || state is StepSuccess) {
+      final currentState = state as dynamic;
+      final currentStep = currentState.currentStep;
+      final formData = currentState.formData;
+
+      if (currentStep > 0) {
+        emit(StepSuccess(
+          currentStep: currentStep - 1,
+          formData: formData,
+        ));
+      }
+    }
+  }
+
+  void _onFormDataUpdated(
+    FormDataUpdated event,
+    Emitter<RegisterState> emit,
+  ) {
+    if (state is StepInitial || state is StepSuccess) {
+      final currentState = state as dynamic;
+      final currentStep = currentState.currentStep;
+      final formData = Map<String, dynamic>.from(currentState.formData);
+      formData.addAll(event.formData);
+
+      emit(StepSuccess(
+        currentStep: currentStep,
+        formData: formData,
+      ));
     }
   }
 }

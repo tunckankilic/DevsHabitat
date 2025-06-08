@@ -318,7 +318,7 @@ class AuthRepositoryImpl implements AuthRepository {
         // Firebase kimlik bilgilerini oluştur
         final OAuthCredential credential =
             firebase_auth.FacebookAuthProvider.credential(
-          accessToken.token,
+          accessToken.tokenString,
         );
 
         // Firebase ile giriş yap

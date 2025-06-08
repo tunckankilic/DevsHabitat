@@ -24,7 +24,8 @@ void main() async {
 
   // Initialize Hydrated Bloc
   final storage = await HydratedStorage.build(
-    storageDirectory: await getTemporaryDirectory(),
+    storageDirectory:
+        HydratedStorageDirectory((await getTemporaryDirectory()).path),
   );
   HydratedBloc.storage = storage;
 
@@ -45,8 +46,8 @@ class MyApp extends StatelessWidget {
         return MaterialApp.router(
           title: 'DevHabitat',
           debugShowCheckedModeBanner: false,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
+          theme: DevHabitatTheme.lightTheme,
+          darkTheme: DevHabitatTheme.darkTheme,
           themeMode: ThemeMode.system,
           routerConfig: AppRouter.router,
         );
