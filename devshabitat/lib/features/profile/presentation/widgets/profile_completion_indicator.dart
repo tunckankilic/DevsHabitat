@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/themes/colors.dart';
 
 class ProfileCompletionIndicator extends StatelessWidget {
   final double completionScore;

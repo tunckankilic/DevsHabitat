@@ -1,5 +1,6 @@
+import 'package:devshabitat/core/themes/colors.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+
 import '../../domain/models/certification.dart';
 
 class CertificationWidget extends StatelessWidget {

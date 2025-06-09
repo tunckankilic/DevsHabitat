@@ -1,17 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
-import '../bloc/profile_view_bloc.dart';
-import '../widgets/profile_header.dart';
-import '../widgets/skill_selection_widget.dart';
-import '../widgets/github_integration_widget.dart';
-import '../widgets/project_showcase_widget.dart';
-import '../widgets/certification_widget.dart';
-import '../widgets/social_links_widget.dart';
-import '../../domain/usecases/get_profile_usecase.dart';
-import '../../domain/repositories/developer_profile_repository.dart';
+
 import '../../../../core/presentation/widgets/responsive_base.dart';
 
 class ProfileViewScreen extends StatelessWidget {

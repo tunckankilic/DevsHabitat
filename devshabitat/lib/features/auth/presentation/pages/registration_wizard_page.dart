@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:devshabitat/core/themes/colors.dart';
-import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/features/auth/presentation/blocs/register/register_bloc.dart';
 import 'package:devshabitat/features/auth/presentation/cubits/github_validation_cubit.dart';
 import 'package:devshabitat/features/auth/presentation/cubits/form_validation_cubit.dart';

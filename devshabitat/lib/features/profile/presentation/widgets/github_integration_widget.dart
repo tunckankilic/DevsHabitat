@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/themes/colors.dart';
 import '../../domain/models/github_repository.dart';
 
 class GitHubIntegrationWidget extends StatelessWidget {

@@ -1,8 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/themes/colors.dart';
 
 class ImageUploadWidget extends StatefulWidget {
   final String? currentImageUrl;

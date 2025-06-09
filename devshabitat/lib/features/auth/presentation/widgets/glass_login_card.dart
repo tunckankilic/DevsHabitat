@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/core/themes/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/email_password_form.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/social_login_section.dart';
 
