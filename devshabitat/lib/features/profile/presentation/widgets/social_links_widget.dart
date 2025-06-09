@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/themes/colors.dart';
 
 class SocialLinksWidget extends StatelessWidget {
   final Map<String, String> socialLinks;
@@ -131,8 +131,8 @@ class SocialLinksWidget extends StatelessWidget {
                         child: TextField(
                           controller: controller,
                           enabled: !readOnly,
-                          style: const TextStyle(
-                            color: DevHabitatColors.text,
+                          style: TextStyle(
+                            color: DevHabitatColors.textPrimary,
                           ),
                           decoration: const InputDecoration(
                             border: InputBorder.none,

@@ -1,7 +1,6 @@
+import 'package:devshabitat/core/themes/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
-import '../bloc/profile_form_bloc.dart';
+
 import '../widgets/profile_completion_indicator.dart';
 import '../widgets/navigation_buttons.dart';
 import '../widgets/skill_selection_widget.dart';
@@ -9,7 +8,6 @@ import '../widgets/image_upload_widget.dart';
 import '../widgets/github_integration_widget.dart';
 import '../widgets/project_showcase_widget.dart';
 import '../widgets/certification_widget.dart';
-import '../widgets/social_links_widget.dart';
 import '../widgets/privacy_settings_widget.dart';
 import '../../domain/models/profile_privacy_settings.dart';
 

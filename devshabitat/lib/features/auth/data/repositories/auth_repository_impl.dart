@@ -3,7 +3,6 @@ import 'package:devshabitat/core/services/firebase_service.dart';
 import 'package:devshabitat/features/auth/domain/entities/user.dart';
 import 'package:devshabitat/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
-import 'package:firebase_auth/firebase_auth.dart' show OAuthCredential;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -106,6 +105,8 @@ class AuthRepositoryImpl implements AuthRepository {
         githubData: provider == 'github'
             ? _getGitHubData(userCredential)
             : existingUser.githubData,
+        createdAt: existingUser.createdAt,
+        updatedAt: DateTime.now(),
       );
 
       await _firebaseService.firestore
@@ -611,6 +612,8 @@ class AuthRepositoryImpl implements AuthRepository {
           githubAvatarUrl: existingUser.githubAvatarUrl,
           githubId: existingUser.githubId,
           githubData: existingUser.githubData,
+          createdAt: existingUser.createdAt,
+          updatedAt: DateTime.now(),
         );
 
         await _firebaseService.firestore
@@ -637,6 +640,8 @@ class AuthRepositoryImpl implements AuthRepository {
         name: displayName,
         avatar: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       await _firebaseService.firestore
@@ -686,6 +691,8 @@ class AuthRepositoryImpl implements AuthRepository {
             id: userCredential.user!.uid,
             email: email,
             name: name,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
           );
 
           await _firebaseService.firestore
@@ -901,6 +908,8 @@ class AuthRepositoryImpl implements AuthRepository {
           githubAvatarUrl: existingUser.githubAvatarUrl,
           githubId: existingUser.githubId,
           githubData: existingUser.githubData,
+          createdAt: existingUser.createdAt,
+          updatedAt: DateTime.now(),
         );
 
         await _firebaseService.firestore
@@ -918,6 +927,8 @@ class AuthRepositoryImpl implements AuthRepository {
         name: _getDisplayName(firebaseUser, userCredential, provider),
         avatar: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         githubUsername:
             provider == 'github' ? _getGitHubUsername(userCredential) : null,
         githubAvatarUrl:

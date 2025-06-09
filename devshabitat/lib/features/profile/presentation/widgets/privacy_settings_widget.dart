@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/themes/colors.dart';
 import '../../domain/models/profile_privacy_settings.dart';
 
 class PrivacySettingsWidget extends StatelessWidget {
