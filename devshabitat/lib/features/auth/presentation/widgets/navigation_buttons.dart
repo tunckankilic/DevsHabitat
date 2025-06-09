@@ -37,7 +37,7 @@ class NavigationButtons extends StatelessWidget {
                       const Icon(Icons.arrow_back),
                       const SizedBox(width: 8),
                       Text(
-                        'Geri',
+                        'Back',
                         style: DevHabitatTheme.labelLarge.copyWith(
                           color: DevHabitatColors.textPrimary,
                         ),
@@ -75,7 +75,7 @@ class NavigationButtons extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      currentStep < 3 ? 'İleri' : 'Kayıt Ol',
+                      currentStep < 3 ? 'Next' : 'Register',
                       style: DevHabitatTheme.labelLarge.copyWith(
                         color: DevHabitatColors.textPrimary,
                       ),

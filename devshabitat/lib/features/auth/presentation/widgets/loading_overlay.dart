@@ -29,7 +29,7 @@ class LoadingOverlay extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Giriş yapılıyor...',
+                  'Signing in...',
                   style: DevHabitatTheme.bodyMedium.copyWith(
                     color: DevHabitatColors.textPrimary,
                   ),

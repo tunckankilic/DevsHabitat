@@ -37,7 +37,7 @@ class GlassLoginCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Hoş Geldiniz',
+                      'Welcome',
                       style: DevHabitatTheme.headingMedium.copyWith(
                         color: DevHabitatColors.textPrimary,
                       ),
@@ -45,7 +45,7 @@ class GlassLoginCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'DevHabitat\'a giriş yapın',
+                      'Sign in to DevHabitat',
                       style: DevHabitatTheme.bodyMedium.copyWith(
                         color: DevHabitatColors.textSecondary,
                       ),
