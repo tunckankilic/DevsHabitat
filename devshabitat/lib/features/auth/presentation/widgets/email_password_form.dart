@@ -87,7 +87,7 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
             obscureText: _obscurePassword,
             style: const TextStyle(color: DevHabitatColors.textPrimary),
             decoration: InputDecoration(
-              labelText: 'Şifre',
+              labelText: 'Password',
               labelStyle: TextStyle(color: DevHabitatColors.textSecondary),
               prefixIcon: Icon(Icons.lock_outline,
                   color: DevHabitatColors.textSecondary),
@@ -122,10 +122,10 @@ class _EmailPasswordFormState extends State<EmailPasswordForm> {
             ),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Lütfen şifrenizi girin';
+                return 'Please enter your password';
               }
               if (value.length < 6) {
-                return 'Şifre en az 6 karakter olmalıdır';
+                return 'Password must be at least 6 characters';
               }
               return null;
             },
