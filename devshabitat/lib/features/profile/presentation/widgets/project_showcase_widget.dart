@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:devshabitat/core/themes/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/project_showcase.dart';
 
 class ProjectShowcaseWidget extends StatelessWidget {
@@ -55,31 +56,26 @@ class ProjectShowcaseWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (project.imageUrls.isNotEmpty)
+          if (project.imageUrl != null)
             ClipRRect(
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
               child: SizedBox(
                 height: 200,
-                child: PageView.builder(
-                  itemCount: project.imageUrls.length,
-                  itemBuilder: (context, index) {
-                    return Image.network(
-                      project.imageUrls[index],
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: DevHabitatColors.surface,
-                          child: const Center(
-                            child: Icon(
-                              Icons.broken_image,
-                              size: 48,
-                              color: DevHabitatColors.textSecondary,
-                            ),
-                          ),
-                        );
-                      },
+                child: Image.network(
+                  project.imageUrl!,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: DevHabitatColors.surface,
+                      child: const Center(
+                        child: Icon(
+                          Icons.broken_image,
+                          size: 48,
+                          color: DevHabitatColors.textSecondary,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -119,11 +115,16 @@ class ProjectShowcaseWidget extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    if (project.liveUrl != null)
+                    if (project.demoUrl != null)
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // TODO: Implement live URL
+                          onPressed: () async {
+                            if (project.demoUrl != null) {
+                              final uri = Uri.parse(project.demoUrl!);
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            }
                           },
                           icon: const Icon(Icons.launch),
                           label: const Text('Canlı Demo'),
@@ -135,13 +136,19 @@ class ProjectShowcaseWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                    if (project.liveUrl != null && project.repoUrl != null)
+                    if (project.demoUrl != null &&
+                        project.sourceCodeUrl != null)
                       const SizedBox(width: 8),
-                    if (project.repoUrl != null)
+                    if (project.sourceCodeUrl != null)
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // TODO: Implement repo URL
+                          onPressed: () async {
+                            if (project.sourceCodeUrl != null) {
+                              final uri = Uri.parse(project.sourceCodeUrl!);
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            }
                           },
                           icon: const Icon(Icons.code),
                           label: const Text('Kaynak Kod'),

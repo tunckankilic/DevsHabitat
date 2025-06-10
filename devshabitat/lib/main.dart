@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:devshabitat/core/config/firebase/firebase_options.dart';
 import 'package:devshabitat/core/injection/injection.dart';
 import 'package:devshabitat/core/config/routes/app_router.dart';
@@ -23,8 +24,7 @@ void main() async {
 
   // Initialize Hydrated Bloc
   final storage = await HydratedStorage.build(
-    storageDirectory:
-        HydratedStorageDirectory((await getTemporaryDirectory()).path),
+    storageDirectory: Directory((await getTemporaryDirectory()).path),
   );
   HydratedBloc.storage = storage;
 

@@ -1,9 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:devshabitat/features/auth/domain/entities/user.dart';
 import 'package:devshabitat/features/auth/domain/repositories/auth_repository.dart';
-import 'package:injectable/injectable.dart';
 
-@injectable
 class SignInWithGitHub {
   final AuthRepository _authRepository;
 

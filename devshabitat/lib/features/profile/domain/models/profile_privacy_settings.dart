@@ -2,69 +2,89 @@ import 'package:equatable/equatable.dart';
 
 class ProfilePrivacySettings extends Equatable {
   final bool isProfilePublic;
-  final bool isEmailPublic;
-  final bool isGitHubPublic;
-  final bool isProjectsPublic;
-  final bool isCertificationsPublic;
-  final bool isSocialLinksPublic;
+  final bool showEmail;
+  final bool showLocation;
+  final bool showSocialLinks;
+  final bool showGitHubStats;
+  final bool showProjects;
+  final bool showCertifications;
+  final bool allowMessages;
+  final bool showOnlineStatus;
 
   const ProfilePrivacySettings({
-    required this.isProfilePublic,
-    required this.isEmailPublic,
-    required this.isGitHubPublic,
-    required this.isProjectsPublic,
-    required this.isCertificationsPublic,
-    required this.isSocialLinksPublic,
+    this.isProfilePublic = true,
+    this.showEmail = false,
+    this.showLocation = true,
+    this.showSocialLinks = true,
+    this.showGitHubStats = true,
+    this.showProjects = true,
+    this.showCertifications = true,
+    this.allowMessages = true,
+    this.showOnlineStatus = true,
   });
-
-  ProfilePrivacySettings copyWith({
-    bool? isProfilePublic,
-    bool? isEmailPublic,
-    bool? isGitHubPublic,
-    bool? isProjectsPublic,
-    bool? isCertificationsPublic,
-    bool? isSocialLinksPublic,
-  }) {
-    return ProfilePrivacySettings(
-      isProfilePublic: isProfilePublic ?? this.isProfilePublic,
-      isEmailPublic: isEmailPublic ?? this.isEmailPublic,
-      isGitHubPublic: isGitHubPublic ?? this.isGitHubPublic,
-      isProjectsPublic: isProjectsPublic ?? this.isProjectsPublic,
-      isCertificationsPublic:
-          isCertificationsPublic ?? this.isCertificationsPublic,
-      isSocialLinksPublic: isSocialLinksPublic ?? this.isSocialLinksPublic,
-    );
-  }
-
-  factory ProfilePrivacySettings.fromMap(Map<String, dynamic> map) {
-    return ProfilePrivacySettings(
-      isProfilePublic: map['isProfilePublic'] as bool? ?? false,
-      isEmailPublic: map['isEmailPublic'] as bool? ?? false,
-      isGitHubPublic: map['isGitHubPublic'] as bool? ?? false,
-      isProjectsPublic: map['isProjectsPublic'] as bool? ?? false,
-      isCertificationsPublic: map['isCertificationsPublic'] as bool? ?? false,
-      isSocialLinksPublic: map['isSocialLinksPublic'] as bool? ?? false,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'isProfilePublic': isProfilePublic,
-      'isEmailPublic': isEmailPublic,
-      'isGitHubPublic': isGitHubPublic,
-      'isProjectsPublic': isProjectsPublic,
-      'isCertificationsPublic': isCertificationsPublic,
-      'isSocialLinksPublic': isSocialLinksPublic,
-    };
-  }
 
   @override
   List<Object?> get props => [
         isProfilePublic,
-        isEmailPublic,
-        isGitHubPublic,
-        isProjectsPublic,
-        isCertificationsPublic,
-        isSocialLinksPublic,
+        showEmail,
+        showLocation,
+        showSocialLinks,
+        showGitHubStats,
+        showProjects,
+        showCertifications,
+        allowMessages,
+        showOnlineStatus,
       ];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'isProfilePublic': isProfilePublic,
+      'showEmail': showEmail,
+      'showLocation': showLocation,
+      'showSocialLinks': showSocialLinks,
+      'showGitHubStats': showGitHubStats,
+      'showProjects': showProjects,
+      'showCertifications': showCertifications,
+      'allowMessages': allowMessages,
+      'showOnlineStatus': showOnlineStatus,
+    };
+  }
+
+  factory ProfilePrivacySettings.fromJson(Map<String, dynamic> json) {
+    return ProfilePrivacySettings(
+      isProfilePublic: json['isProfilePublic'] as bool? ?? true,
+      showEmail: json['showEmail'] as bool? ?? false,
+      showLocation: json['showLocation'] as bool? ?? true,
+      showSocialLinks: json['showSocialLinks'] as bool? ?? true,
+      showGitHubStats: json['showGitHubStats'] as bool? ?? true,
+      showProjects: json['showProjects'] as bool? ?? true,
+      showCertifications: json['showCertifications'] as bool? ?? true,
+      allowMessages: json['allowMessages'] as bool? ?? true,
+      showOnlineStatus: json['showOnlineStatus'] as bool? ?? true,
+    );
+  }
+
+  ProfilePrivacySettings copyWith({
+    bool? isProfilePublic,
+    bool? showEmail,
+    bool? showLocation,
+    bool? showSocialLinks,
+    bool? showGitHubStats,
+    bool? showProjects,
+    bool? showCertifications,
+    bool? allowMessages,
+    bool? showOnlineStatus,
+  }) {
+    return ProfilePrivacySettings(
+      isProfilePublic: isProfilePublic ?? this.isProfilePublic,
+      showEmail: showEmail ?? this.showEmail,
+      showLocation: showLocation ?? this.showLocation,
+      showSocialLinks: showSocialLinks ?? this.showSocialLinks,
+      showGitHubStats: showGitHubStats ?? this.showGitHubStats,
+      showProjects: showProjects ?? this.showProjects,
+      showCertifications: showCertifications ?? this.showCertifications,
+      allowMessages: allowMessages ?? this.allowMessages,
+      showOnlineStatus: showOnlineStatus ?? this.showOnlineStatus,
+    );
+  }
 }

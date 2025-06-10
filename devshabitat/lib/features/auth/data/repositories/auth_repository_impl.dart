@@ -86,8 +86,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final updatedUser = User(
         id: existingUser.id,
         email: existingUser.email,
-        name: existingUser.name,
-        avatar: existingUser.avatar ?? userCredential.user!.photoURL,
+        displayName: existingUser.displayName,
+        photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
         skills: existingUser.skills,
         experience: existingUser.experience,
         preferences: existingUser.preferences,
@@ -601,8 +601,8 @@ class AuthRepositoryImpl implements AuthRepository {
         final updatedUser = User(
           id: existingUser.id,
           email: existingUser.email,
-          name: existingUser.name,
-          avatar: existingUser.avatar,
+          displayName: existingUser.displayName,
+          photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
           skills: existingUser.skills,
           experience: existingUser.experience,
           preferences: existingUser.preferences,
@@ -637,8 +637,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final newUser = User(
         id: firebaseUser.uid,
         email: firebaseUser.email ?? 'no-email@apple.com',
-        name: displayName,
-        avatar: firebaseUser.photoURL,
+        displayName: displayName,
+        photoURL: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -690,7 +690,7 @@ class AuthRepositoryImpl implements AuthRepository {
           final newUser = User(
             id: userCredential.user!.uid,
             email: email,
-            name: name,
+            displayName: name,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
@@ -897,8 +897,8 @@ class AuthRepositoryImpl implements AuthRepository {
         final updatedUser = User(
           id: existingUser.id,
           email: existingUser.email,
-          name: existingUser.name,
-          avatar: existingUser.avatar,
+          displayName: existingUser.displayName,
+          photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
           skills: existingUser.skills,
           experience: existingUser.experience,
           preferences: existingUser.preferences,
@@ -924,8 +924,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final newUser = User(
         id: firebaseUser.uid,
         email: firebaseUser.email ?? 'no-email@$provider.com',
-        name: _getDisplayName(firebaseUser, userCredential, provider),
-        avatar: firebaseUser.photoURL,
+        displayName: _getDisplayName(firebaseUser, userCredential, provider),
+        photoURL: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

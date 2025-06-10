@@ -347,11 +347,14 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           PrivacySettingsWidget(
             settings: ProfilePrivacySettings(
               isProfilePublic: true,
-              isEmailPublic: false,
-              isGitHubPublic: true,
-              isProjectsPublic: true,
-              isCertificationsPublic: true,
-              isSocialLinksPublic: true,
+              showEmail: false,
+              showLocation: true,
+              showSocialLinks: true,
+              showGitHubStats: true,
+              showProjects: true,
+              showCertifications: true,
+              allowMessages: true,
+              showOnlineStatus: true,
             ),
             onSettingsChanged: (settings) {
               // TODO: Implement privacy settings update

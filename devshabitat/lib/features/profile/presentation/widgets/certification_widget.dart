@@ -70,7 +70,7 @@ class CertificationWidget extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    certification.name,
+                    certification.title,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),

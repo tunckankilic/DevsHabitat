@@ -3,6 +3,57 @@ import 'package:devshabitat/core/themes/colors.dart';
 import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/glass_login_card.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/loading_overlay.dart';
+import 'package:go_router/go_router.dart';
+
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Giriş Yap'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'E-posta',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const TextField(
+              decoration: InputDecoration(
+                labelText: 'Şifre',
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                // TODO: Implement login
+                context.go('/home');
+              },
+              child: const Text('Giriş Yap'),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: () {
+                context.go('/register');
+              },
+              child: const Text('Hesabın yok mu? Kayıt ol'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
 class ResponsiveLoginScreen extends StatelessWidget {
   final bool isLoading;

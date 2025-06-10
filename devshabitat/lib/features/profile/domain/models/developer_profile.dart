@@ -11,163 +11,155 @@ enum ExperienceLevel { junior, mid, senior, lead }
 class DeveloperProfile extends Equatable {
   final String id;
   final String userId;
-  final String fullName;
-  final String title;
+  final String displayName;
   final String? bio;
+  final String? avatarUrl;
+  final List<String> skills;
   final String? location;
   final String? email;
-  final String? phone;
-  final String? website;
   final String? profileImageUrl;
+  final String? website;
   final Map<String, String> socialLinks;
-  final List<String> skills;
-  final ExperienceLevel experienceLevel;
-  final String? company;
-  final String? position;
-  final List<Education> education;
-  final List<String> languages;
   final String? gitHubUsername;
   final Map<String, dynamic>? gitHubStats;
   final List<GitHubRepository> featuredRepositories;
   final List<ProjectShowcase> projects;
   final List<Certification> certifications;
   final ProfilePrivacySettings privacySettings;
+  final ExperienceLevel experienceLevel;
   final double profileCompletionScore;
-  final DateTime lastUpdated;
+  final DateTime? lastUpdated;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   const DeveloperProfile({
     required this.id,
     required this.userId,
-    required this.fullName,
-    required this.title,
+    required this.displayName,
     this.bio,
+    this.avatarUrl,
+    required this.skills,
     this.location,
     this.email,
-    this.phone,
-    this.website,
     this.profileImageUrl,
+    this.website,
     this.socialLinks = const {},
-    this.skills = const [],
-    this.experienceLevel = ExperienceLevel.junior,
-    this.company,
-    this.position,
-    this.education = const [],
-    this.languages = const [],
     this.gitHubUsername,
     this.gitHubStats,
     this.featuredRepositories = const [],
     this.projects = const [],
     this.certifications = const [],
     required this.privacySettings,
-    required this.profileCompletionScore,
-    required this.lastUpdated,
+    required this.experienceLevel,
+    this.profileCompletionScore = 0.0,
+    this.lastUpdated,
+    required this.createdAt,
+    required this.updatedAt,
   });
 
   @override
   List<Object?> get props => [
         id,
         userId,
-        fullName,
-        title,
+        displayName,
         bio,
+        avatarUrl,
+        skills,
         location,
         email,
-        phone,
-        website,
         profileImageUrl,
+        website,
         socialLinks,
-        skills,
-        experienceLevel,
-        company,
-        position,
-        education,
-        languages,
         gitHubUsername,
         gitHubStats,
         featuredRepositories,
         projects,
         certifications,
         privacySettings,
+        experienceLevel,
         profileCompletionScore,
         lastUpdated,
+        createdAt,
+        updatedAt,
       ];
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
       'id': id,
       'userId': userId,
-      'fullName': fullName,
-      'title': title,
+      'displayName': displayName,
       'bio': bio,
+      'avatarUrl': avatarUrl,
+      'skills': skills,
       'location': location,
       'email': email,
-      'phone': phone,
-      'website': website,
       'profileImageUrl': profileImageUrl,
+      'website': website,
       'socialLinks': socialLinks,
-      'skills': skills,
-      'experienceLevel': experienceLevel.toString(),
-      'company': company,
-      'position': position,
-      'education': education.map((e) => e.toMap()).toList(),
-      'languages': languages,
       'gitHubUsername': gitHubUsername,
       'gitHubStats': gitHubStats,
       'featuredRepositories':
-          featuredRepositories.map((r) => r.toMap()).toList(),
-      'projects': projects.map((p) => p.toMap()).toList(),
-      'certifications': certifications.map((c) => c.toMap()).toList(),
-      'privacySettings': privacySettings.toMap(),
+          featuredRepositories.map((r) => r.toJson()).toList(),
+      'projects': projects.map((p) => p.toJson()).toList(),
+      'certifications': certifications.map((c) => c.toJson()).toList(),
+      'privacySettings': privacySettings.toJson(),
+      'experienceLevel': experienceLevel.toString(),
       'profileCompletionScore': profileCompletionScore,
-      'lastUpdated': lastUpdated.toIso8601String(),
+      'lastUpdated': lastUpdated?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
     };
+  }
+
+  factory DeveloperProfile.fromJson(Map<String, dynamic> json) {
+    return DeveloperProfile(
+      id: json['id'] as String,
+      userId: json['userId'] as String,
+      displayName: json['displayName'] as String,
+      bio: json['bio'] as String?,
+      avatarUrl: json['avatarUrl'] as String?,
+      skills: List<String>.from(json['skills'] ?? []),
+      location: json['location'] as String?,
+      email: json['email'] as String?,
+      profileImageUrl: json['profileImageUrl'] as String?,
+      website: json['website'] as String?,
+      socialLinks: Map<String, String>.from(json['socialLinks'] ?? {}),
+      gitHubUsername: json['gitHubUsername'] as String?,
+      gitHubStats: json['gitHubStats'] as Map<String, dynamic>?,
+      featuredRepositories: (json['featuredRepositories'] as List<dynamic>?)
+              ?.map((e) => GitHubRepository.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      projects: (json['projects'] as List<dynamic>?)
+              ?.map((e) => ProjectShowcase.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      certifications: (json['certifications'] as List<dynamic>?)
+              ?.map((e) => Certification.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      privacySettings: ProfilePrivacySettings.fromJson(
+          json['privacySettings'] as Map<String, dynamic>),
+      experienceLevel: ExperienceLevel.values.firstWhere(
+          (e) => e.toString() == json['experienceLevel'],
+          orElse: () => ExperienceLevel.junior),
+      profileCompletionScore:
+          (json['profileCompletionScore'] as num?)?.toDouble() ?? 0.0,
+      lastUpdated: json['lastUpdated'] != null
+          ? DateTime.parse(json['lastUpdated'] as String)
+          : null,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+      updatedAt: DateTime.parse(json['updatedAt'] as String),
+    );
   }
 
   factory DeveloperProfile.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return DeveloperProfile(
-      id: doc.id,
-      userId: data['userId'] as String,
-      fullName: data['fullName'] as String,
-      title: data['title'] as String,
-      bio: data['bio'] as String?,
-      location: data['location'] as String?,
-      email: data['email'] as String?,
-      phone: data['phone'] as String?,
-      website: data['website'] as String?,
-      profileImageUrl: data['profileImageUrl'] as String?,
-      socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
-      skills: List<String>.from(data['skills'] ?? []),
-      experienceLevel: ExperienceLevel.values.firstWhere(
-        (e) => e.toString() == data['experienceLevel'],
-        orElse: () => ExperienceLevel.junior,
-      ),
-      company: data['company'] as String?,
-      position: data['position'] as String?,
-      education: (data['education'] as List<dynamic>?)
-              ?.map((e) => Education.fromMap(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      languages: List<String>.from(data['languages'] ?? []),
-      gitHubUsername: data['gitHubUsername'] as String?,
-      gitHubStats: data['gitHubStats'] as Map<String, dynamic>?,
-      featuredRepositories: (data['featuredRepositories'] as List<dynamic>?)
-              ?.map((r) => GitHubRepository.fromMap(r as Map<String, dynamic>))
-              .toList() ??
-          [],
-      projects: (data['projects'] as List<dynamic>?)
-              ?.map((p) => ProjectShowcase.fromMap(p as Map<String, dynamic>))
-              .toList() ??
-          [],
-      certifications: (data['certifications'] as List<dynamic>?)
-              ?.map((c) => Certification.fromMap(c as Map<String, dynamic>))
-              .toList() ??
-          [],
-      privacySettings: ProfilePrivacySettings.fromMap(
-          data['privacySettings'] as Map<String, dynamic>? ?? {}),
-      profileCompletionScore:
-          (data['profileCompletionScore'] as num?)?.toDouble() ?? 0.0,
-      lastUpdated: DateTime.parse(data['lastUpdated'] as String),
-    );
+    return DeveloperProfile.fromJson({
+      'id': doc.id,
+      ...data,
+    });
   }
+
+  Map<String, dynamic> toMap() => toJson();
 }
