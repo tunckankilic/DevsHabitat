@@ -32,6 +32,21 @@ class MessagesUpdated extends ChatEvent {
   List<Object> get props => [messages];
 }
 
+class BlockUser extends ChatEvent {
+  final String userId;
+  final String blockedUserId;
+  const BlockUser(this.userId, this.blockedUserId);
+  @override
+  List<Object> get props => [userId, blockedUserId];
+}
+
+class DeleteConversation extends ChatEvent {
+  final String conversationId;
+  const DeleteConversation(this.conversationId);
+  @override
+  List<Object> get props => [conversationId];
+}
+
 // States
 abstract class ChatState extends Equatable {
   const ChatState();
@@ -66,6 +81,8 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<LoadMessages>(_onLoadMessages);
     on<SendMessage>(_onSendMessage);
     on<MessagesUpdated>(_onMessagesUpdated);
+    on<BlockUser>(_onBlockUser);
+    on<DeleteConversation>(_onDeleteConversation);
   }
 
   void _onLoadMessages(LoadMessages event, Emitter<ChatState> emit) async {
@@ -93,6 +110,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onMessagesUpdated(MessagesUpdated event, Emitter<ChatState> emit) {
     emit(ChatLoaded(event.messages));
+  }
+
+  void _onBlockUser(BlockUser event, Emitter<ChatState> emit) async {
+    try {
+      await _messagingRepository.blockUser(event.userId, event.blockedUserId);
+    } catch (e) {
+      emit(ChatError(e.toString()));
+    }
+  }
+
+  void _onDeleteConversation(
+      DeleteConversation event, Emitter<ChatState> emit) async {
+    try {
+      await _messagingRepository.deleteConversation(event.conversationId);
+    } catch (e) {
+      emit(ChatError(e.toString()));
+    }
   }
 
   @override

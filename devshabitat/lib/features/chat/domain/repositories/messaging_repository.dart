@@ -11,13 +11,15 @@ abstract class MessagingRepository {
   Stream<List<Message>> getMessages(String conversationId);
   Future<void> sendMessage(Message message);
   Future<void> updateMessage(Message message);
-  Future<void> deleteMessage(String messageId);
-  Future<void> markMessageAsRead(String messageId, String userId);
+  Future<void> deleteMessage(String messageId, String conversationId);
+  Future<void> markMessageAsRead(
+      String messageId, String conversationId, String userId);
   Future<void> createConversation(Conversation conversation);
   Future<void> updateConversation(Conversation conversation);
   Future<void> deleteConversation(String conversationId);
   Future<String> uploadAttachment(String path, Uint8List bytes);
   Future<void> deleteAttachment(String path);
+  Future<void> blockUser(String userId, String blockedUserId);
 }
 
 class FirebaseMessagingRepository implements MessagingRepository {
@@ -97,26 +99,40 @@ class FirebaseMessagingRepository implements MessagingRepository {
   }
 
   @override
-  Future<void> deleteMessage(String messageId) async {
+  Future<void> deleteMessage(String messageId, String conversationId) async {
     // Note: In a real app, you might want to implement soft delete
     await _firestore
         .collection('conversations')
-        .doc(messageId)
+        .doc(conversationId)
         .collection('messages')
         .doc(messageId)
         .delete();
   }
 
   @override
-  Future<void> markMessageAsRead(String messageId, String userId) async {
-    await _firestore
+  Future<void> markMessageAsRead(
+      String messageId, String conversationId, String userId) async {
+    final batch = _firestore.batch();
+
+    // Mesajı okundu olarak işaretle
+    final messageRef = _firestore
         .collection('conversations')
-        .doc(messageId)
+        .doc(conversationId)
         .collection('messages')
-        .doc(messageId)
-        .update({
+        .doc(messageId);
+    batch.update(messageRef, {
       'readBy.$userId': FieldValue.serverTimestamp(),
     });
+
+    // Konuşmanın okunmamış mesaj sayısını güncelle
+    final conversationRef =
+        _firestore.collection('conversations').doc(conversationId);
+    batch.update(conversationRef, {
+      'unreadCounts.$userId': 0,
+      'lastReadBy.$userId': FieldValue.serverTimestamp(),
+    });
+
+    await batch.commit();
   }
 
   @override
@@ -151,5 +167,17 @@ class FirebaseMessagingRepository implements MessagingRepository {
   @override
   Future<void> deleteAttachment(String path) async {
     await _storage.ref().child(path).delete();
+  }
+
+  @override
+  Future<void> blockUser(String userId, String blockedUserId) async {
+    await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('blockedUsers')
+        .doc(blockedUserId)
+        .set({
+      'blockedAt': FieldValue.serverTimestamp(),
+    });
   }
 }

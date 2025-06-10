@@ -4,7 +4,6 @@ import 'package:equatable/equatable.dart';
 import 'profile_privacy_settings.dart';
 import 'github_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'education.dart';
 
 enum ExperienceLevel { junior, mid, senior, lead }
 

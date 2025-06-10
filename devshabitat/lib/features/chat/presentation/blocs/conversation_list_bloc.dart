@@ -30,6 +30,15 @@ class ConversationsUpdated extends ConversationListEvent {
   List<Object> get props => [conversations];
 }
 
+class DeleteAllConversations extends ConversationListEvent {
+  final String userId;
+
+  const DeleteAllConversations(this.userId);
+
+  @override
+  List<Object> get props => [userId];
+}
+
 // States
 abstract class ConversationListState extends Equatable {
   const ConversationListState();
@@ -70,6 +79,7 @@ class ConversationListBloc
       : super(ConversationListInitial()) {
     on<LoadConversations>(_onLoadConversations);
     on<ConversationsUpdated>(_onConversationsUpdated);
+    on<DeleteAllConversations>(_onDeleteAllConversations);
   }
 
   void _onLoadConversations(
@@ -92,6 +102,20 @@ class ConversationListBloc
   void _onConversationsUpdated(
       ConversationsUpdated event, Emitter<ConversationListState> emit) {
     emit(ConversationListLoaded(event.conversations));
+  }
+
+  void _onDeleteAllConversations(
+      DeleteAllConversations event, Emitter<ConversationListState> emit) async {
+    try {
+      final conversations =
+          await _messagingRepository.getConversations(event.userId).first;
+
+      for (final conversation in conversations) {
+        await _messagingRepository.deleteConversation(conversation.id);
+      }
+    } catch (e) {
+      emit(ConversationListError(e.toString()));
+    }
   }
 
   @override

@@ -16,5 +16,5 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
   // Diğer bağımlılıkları başlat
-  await getIt.init();
+  getIt.init();
 }

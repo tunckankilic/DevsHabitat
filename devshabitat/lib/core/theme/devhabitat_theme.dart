@@ -119,15 +119,15 @@ class DevHabitatTheme {
     double blurRadius = 10,
   }) {
     return BoxDecoration(
-      color: background.withOpacity(0.8),
+      color: background.withAlpha(204),
       borderRadius: BorderRadius.circular(borderRadius),
       border: Border.all(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withAlpha(26),
         width: 1,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.1),
+          color: Colors.black.withAlpha(26),
           blurRadius: blurRadius,
           spreadRadius: 0,
         ),

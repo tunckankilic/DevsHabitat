@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import '../models/developer_profile.dart';
 import '../repositories/developer_profile_repository.dart';
 

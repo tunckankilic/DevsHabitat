@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../domain/entities/conversation.dart';
 import '../blocs/conversation_list_bloc.dart';
-import '../screens/chat_screen.dart';
 import 'package:go_router/go_router.dart';
 
 class ConversationListScreen extends StatelessWidget {
@@ -171,8 +170,10 @@ class ConversationListScreen extends StatelessWidget {
                       ),
                     ),
                     onTap: () {
-                      // TODO: Navigate to chat screen
                       Navigator.pop(context);
+                      context.push('/chat/${user['id']}', extra: {
+                        'participantName': user['name'],
+                      });
                     },
                   );
                 },
@@ -251,8 +252,10 @@ class ConversationListScreen extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     onTap: () {
-                      // TODO: Navigate to chat screen
                       Navigator.pop(context);
+                      context.push('/chat/${result['id']}', extra: {
+                        'participantName': result['name'],
+                      });
                     },
                   );
                 },
@@ -286,8 +289,8 @@ class ConversationListScreen extends StatelessWidget {
                 style: DevHabitatTheme.titleMedium,
               ),
               onTap: () {
-                // TODO: Navigate to notification settings
                 Navigator.pop(context);
+                context.push('/settings/notifications');
               },
             ),
             ListTile(
@@ -300,8 +303,8 @@ class ConversationListScreen extends StatelessWidget {
                 style: DevHabitatTheme.titleMedium,
               ),
               onTap: () {
-                // TODO: Navigate to blocked users
                 Navigator.pop(context);
+                context.push('/settings/blocked-users');
               },
             ),
             ListTile(
@@ -316,8 +319,36 @@ class ConversationListScreen extends StatelessWidget {
                 ),
               ),
               onTap: () {
-                // TODO: Show confirmation dialog
                 Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Tüm Sohbetleri Temizle'),
+                    content: const Text(
+                        'Tüm sohbetlerinizi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('İptal'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          if (currentUser != null) {
+                            context.read<ConversationListBloc>().add(
+                                  DeleteAllConversations(currentUser.uid),
+                                );
+                          }
+                          Navigator.pop(context);
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: DevHabitatColors.error,
+                        ),
+                        child: const Text('Sil'),
+                      ),
+                    ],
+                  ),
+                );
               },
             ),
           ],

@@ -274,7 +274,21 @@ class _ChatScreenState extends State<ChatScreen> {
                         title: const Text('Kullanıcıyı Engelle'),
                         onTap: () {
                           Navigator.pop(context);
-                          // TODO: Kullanıcı engelleme işlemi
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          if (currentUser != null) {
+                            context.read<ChatBloc>().add(
+                                  BlockUser(
+                                    currentUser.uid,
+                                    widget.conversationId,
+                                  ),
+                                );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Kullanıcı engellendi'),
+                              ),
+                            );
+                            context.pop();
+                          }
                         },
                       ),
                       ListTile(
@@ -282,7 +296,31 @@ class _ChatScreenState extends State<ChatScreen> {
                         title: const Text('Sohbeti Sil'),
                         onTap: () {
                           Navigator.pop(context);
-                          // TODO: Sohbet silme işlemi
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Sohbeti Sil'),
+                              content: const Text(
+                                  'Bu sohbeti silmek istediğinizden emin misiniz?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('İptal'),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    context.read<ChatBloc>().add(
+                                          DeleteConversation(
+                                              widget.conversationId),
+                                        );
+                                    Navigator.pop(context);
+                                    context.pop();
+                                  },
+                                  child: const Text('Sil'),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                       ),
                     ],
