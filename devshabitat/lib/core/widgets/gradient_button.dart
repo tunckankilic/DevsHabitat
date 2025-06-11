@@ -1,6 +1,6 @@
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
+import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:devshabitat/core/themes/colors.dart';
-import 'package:devshabitat/core/themes/app_theme.dart';
 
 class GradientButton extends StatelessWidget {
   final String text;
@@ -48,10 +48,10 @@ class GradientButton extends StatelessWidget {
               child: Text(
                 text,
                 style: textStyle ??
-                    DevHabitatTheme.labelLarge.copyWith(
-                      color: DevHabitatColors.textPrimary,
-                      fontWeight: FontWeight.w600,
-                    ),
+                    Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: DevHabitatColors.textPrimary,
+                          fontWeight: FontWeight.w600,
+                        ),
               ),
             ),
           ),

@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
+import '../../data/services/encryption_service.dart';
 
 enum MessageType {
   text,
   image,
   file,
   code,
+  voice,
+  video,
 }
 
 class Message extends Equatable {
@@ -16,7 +19,7 @@ class Message extends Equatable {
   final DateTime timestamp;
   final Map<String, DateTime> readBy;
   final String? replyToMessageId;
-  final List<MessageAttachment> attachments;
+  final List<MessageAttachment>? attachments;
   final bool isEdited;
   final DateTime? editedAt;
 
@@ -29,10 +32,56 @@ class Message extends Equatable {
     required this.timestamp,
     required this.readBy,
     this.replyToMessageId,
-    this.attachments = const [],
+    this.attachments,
     this.isEdited = false,
     this.editedAt,
   });
+
+  Future<Message> encrypt(EncryptionService encryptionService) async {
+    final encryptedMessage = await encryptionService.encryptMessage(
+      content: content,
+      conversationId: conversationId,
+      messageType: type,
+    );
+    return Message(
+      id: id,
+      conversationId: conversationId,
+      senderId: senderId,
+      content: encryptedMessage.encryptedContent,
+      type: type,
+      timestamp: timestamp,
+      readBy: readBy,
+      replyToMessageId: replyToMessageId,
+      attachments: attachments,
+      isEdited: isEdited,
+      editedAt: editedAt,
+    );
+  }
+
+  Future<Message> decrypt(EncryptionService encryptionService) async {
+    final decryptedMessage = await encryptionService.decryptMessage(
+      encryptedMessage: EncryptedMessage(
+        encryptedContent: content,
+        iv: '', // TODO: Store IV with message
+        hash: '', // TODO: Store hash with message
+        encryptionVersion: '1.0',
+      ),
+      conversationId: conversationId,
+    );
+    return Message(
+      id: id,
+      conversationId: conversationId,
+      senderId: senderId,
+      content: decryptedMessage.content,
+      type: decryptedMessage.messageType,
+      timestamp: decryptedMessage.timestamp,
+      readBy: readBy,
+      replyToMessageId: replyToMessageId,
+      attachments: attachments,
+      isEdited: isEdited,
+      editedAt: editedAt,
+    );
+  }
 
   factory Message.fromFirestore(Map<String, dynamic> doc) {
     return Message(
@@ -48,9 +97,8 @@ class Message extends Equatable {
       readBy: Map<String, DateTime>.from(doc['readBy'] as Map),
       replyToMessageId: doc['replyToMessageId'] as String?,
       attachments: (doc['attachments'] as List?)
-              ?.map((e) => MessageAttachment.fromMap(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+          ?.map((e) => MessageAttachment.fromMap(e as Map<String, dynamic>))
+          .toList(),
       isEdited: doc['isEdited'] as bool? ?? false,
       editedAt: doc['editedAt'] as DateTime?,
     );
@@ -66,7 +114,7 @@ class Message extends Equatable {
       'timestamp': timestamp,
       'readBy': readBy,
       'replyToMessageId': replyToMessageId,
-      'attachments': attachments.map((e) => e.toMap()).toList(),
+      'attachments': attachments?.map((e) => e.toMap()).toList(),
       'isEdited': isEdited,
       'editedAt': editedAt,
     };

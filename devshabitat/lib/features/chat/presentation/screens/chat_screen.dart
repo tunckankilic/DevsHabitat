@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:devshabitat/core/theme/devhabitat_theme.dart';
-import 'package:devshabitat/core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import '../blocs/chat_bloc.dart';
 import '../widgets/message_bubble.dart';
 import '../../domain/entities/message.dart';
