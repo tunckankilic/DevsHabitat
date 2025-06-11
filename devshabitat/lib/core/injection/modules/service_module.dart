@@ -9,5 +9,5 @@ abstract class ServiceModule {
 
   @singleton
   InternetConnectionChecker internetConnectionChecker() =>
-      InternetConnectionChecker();
+      InternetConnectionChecker.createInstance();
 }

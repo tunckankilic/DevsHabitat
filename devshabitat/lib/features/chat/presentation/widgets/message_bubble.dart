@@ -1,8 +1,8 @@
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'package:devshabitat/core/theme/devhabitat_theme.dart';
-import 'package:devshabitat/core/theme/devhabitat_colors.dart';
 import '../../domain/entities/message.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -108,7 +108,7 @@ class MessageBubble extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: CachedNetworkImage(
-        imageUrl: message.attachments.first.url,
+        imageUrl: message.attachments?.first.url ?? '',
         placeholder: (context, url) => Container(
           width: 200,
           height: 200,
@@ -128,7 +128,9 @@ class MessageBubble extends StatelessWidget {
   }
 
   Widget _buildFileMessage() {
-    final attachment = message.attachments.first;
+    final attachment = message.attachments?.first;
+    if (attachment == null) return const SizedBox.shrink();
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

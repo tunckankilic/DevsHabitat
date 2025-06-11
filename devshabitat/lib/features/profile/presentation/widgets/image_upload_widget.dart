@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:devshabitat/core/themes/colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 
 class ImageUploadWidget extends StatefulWidget {
   final String? currentImageUrl;
@@ -38,11 +38,6 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
             ratioX: widget.aspectRatio,
             ratioY: 1,
           ),
-          aspectRatioPresets: [
-            CropAspectRatioPreset.square,
-            CropAspectRatioPreset.ratio3x2,
-            CropAspectRatioPreset.original,
-          ],
           uiSettings: [
             AndroidUiSettings(
               toolbarTitle: 'Resmi Düzenle',

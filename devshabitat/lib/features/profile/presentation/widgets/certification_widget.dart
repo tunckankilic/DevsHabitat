@@ -1,4 +1,4 @@
-import 'package:devshabitat/core/themes/colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/models/certification.dart';

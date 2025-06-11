@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:devshabitat/core/themes/colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import '../../domain/models/developer_profile.dart';
 
 class ProfileHeader extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:devshabitat/core/theme/devhabitat_colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

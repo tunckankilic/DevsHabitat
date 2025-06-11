@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:devshabitat/core/themes/colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/github_repository.dart';
 
