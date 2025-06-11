@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:devshabitat/core/themes/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../domain/models/github_repository.dart';
 
 class GitHubIntegrationWidget extends StatelessWidget {
@@ -174,8 +175,12 @@ class GitHubIntegrationWidget extends StatelessWidget {
                   ),
                 ),
                 TextButton.icon(
-                  onPressed: () {
-                    // TODO: Implement repository link
+                  onPressed: () async {
+                    final url =
+                        Uri.parse('https://github.com/$username/${repo.name}');
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url);
+                    }
                   },
                   icon: const Icon(
                     Icons.link,
@@ -188,38 +193,34 @@ class GitHubIntegrationWidget extends StatelessWidget {
                 ),
               ],
             ),
-            if (repo.description != null) ...[
-              const SizedBox(height: 8),
-              Text(
-                repo.description!,
-                style: const TextStyle(
-                  color: DevHabitatColors.textSecondary,
-                ),
+            const SizedBox(height: 8),
+            Text(
+              repo.description,
+              style: const TextStyle(
+                color: DevHabitatColors.textSecondary,
               ),
-            ],
+            ),
             const SizedBox(height: 16),
             Row(
               children: [
-                if (repo.language != null) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: DevHabitatColors.primary.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      repo.language!,
-                      style: const TextStyle(
-                        color: DevHabitatColors.primary,
-                        fontSize: 12,
-                      ),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: DevHabitatColors.primary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    repo.language,
+                    style: const TextStyle(
+                      color: DevHabitatColors.primary,
+                      fontSize: 12,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                ],
+                ),
+                const SizedBox(width: 16),
                 const Icon(
                   Icons.star,
                   size: 16,

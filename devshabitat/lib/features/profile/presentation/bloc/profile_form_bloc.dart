@@ -5,6 +5,7 @@ import '../../domain/models/certification.dart';
 import '../../domain/models/github_repository.dart';
 import '../../domain/models/project_showcase.dart';
 import '../../domain/models/profile_privacy_settings.dart';
+import '../../domain/repositories/developer_profile_repository.dart';
 
 // Events
 abstract class ProfileFormEvent extends Equatable {
@@ -15,16 +16,14 @@ abstract class ProfileFormEvent extends Equatable {
 }
 
 class UpdateBasicInfo extends ProfileFormEvent {
-  final String fullName;
-  final String title;
+  final String displayName;
   final String? email;
   final String? location;
   final String? bio;
   final String? profileImageUrl;
 
   const UpdateBasicInfo({
-    required this.fullName,
-    required this.title,
+    required this.displayName,
     this.email,
     this.location,
     this.bio,
@@ -33,8 +32,7 @@ class UpdateBasicInfo extends ProfileFormEvent {
 
   @override
   List<Object?> get props => [
-        fullName,
-        title,
+        displayName,
         email,
         location,
         bio,
@@ -164,7 +162,9 @@ class ProfileFormSaved extends ProfileFormState {}
 
 // Bloc
 class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
-  ProfileFormBloc() : super(ProfileFormInitial()) {
+  final IDeveloperProfileRepository _repository;
+
+  ProfileFormBloc(this._repository) : super(ProfileFormInitial()) {
     on<UpdateBasicInfo>(_onUpdateBasicInfo);
     on<UpdateProfessionalDetails>(_onUpdateProfessionalDetails);
     on<UpdateSkills>(_onUpdateSkills);
@@ -185,8 +185,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: event.fullName,
-        title: event.title,
+        displayName: event.displayName,
         email: event.email,
         location: event.location,
         bio: event.bio,
@@ -203,6 +202,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -217,8 +218,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -235,6 +235,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: event.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -249,8 +251,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -267,6 +268,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -281,8 +284,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -299,6 +301,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -313,8 +317,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -331,6 +334,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -345,8 +350,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -363,6 +367,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -377,8 +383,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -395,6 +400,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -409,8 +416,7 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
       final updatedProfile = DeveloperProfile(
         id: currentProfile.id,
         userId: currentProfile.userId,
-        fullName: currentProfile.fullName,
-        title: currentProfile.title,
+        displayName: currentProfile.displayName,
         bio: currentProfile.bio,
         location: currentProfile.location,
         email: currentProfile.email,
@@ -427,6 +433,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
         experienceLevel: currentProfile.experienceLevel,
         profileCompletionScore: currentProfile.profileCompletionScore,
         lastUpdated: currentProfile.lastUpdated,
+        createdAt: currentProfile.createdAt,
+        updatedAt: currentProfile.updatedAt,
       );
       emit(ProfileFormLoaded(updatedProfile));
     }
@@ -439,7 +447,8 @@ class ProfileFormBloc extends Bloc<ProfileFormEvent, ProfileFormState> {
     if (state is ProfileFormLoaded) {
       emit(ProfileFormLoading());
       try {
-        // TODO: Implement save functionality
+        final profile = (state as ProfileFormLoaded).developerProfile;
+        await _repository.updateProfile(profile);
         emit(ProfileFormSaved());
       } catch (e) {
         emit(ProfileFormError(e.toString()));

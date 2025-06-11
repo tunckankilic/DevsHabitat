@@ -47,10 +47,10 @@ class PrivacySettingsWidget extends StatelessWidget {
           context,
           'E-posta Görünürlüğü',
           'E-posta adresinizi herkese açık yapın',
-          settings.isEmailPublic,
+          settings.showEmail,
           (value) {
             onSettingsChanged(
-              settings.copyWith(isEmailPublic: value),
+              settings.copyWith(showEmail: value),
             );
           },
         ),
@@ -59,10 +59,10 @@ class PrivacySettingsWidget extends StatelessWidget {
           context,
           'Sosyal Medya Görünürlüğü',
           'Sosyal medya hesaplarınızı herkese açık yapın',
-          settings.isSocialLinksPublic,
+          settings.showSocialLinks,
           (value) {
             onSettingsChanged(
-              settings.copyWith(isSocialLinksPublic: value),
+              settings.copyWith(showSocialLinks: value),
             );
           },
         ),
@@ -71,10 +71,10 @@ class PrivacySettingsWidget extends StatelessWidget {
           context,
           'GitHub Görünürlüğü',
           'GitHub bilgilerinizi herkese açık yapın',
-          settings.isGitHubPublic,
+          settings.showGitHubStats,
           (value) {
             onSettingsChanged(
-              settings.copyWith(isGitHubPublic: value),
+              settings.copyWith(showGitHubStats: value),
             );
           },
         ),
@@ -83,10 +83,10 @@ class PrivacySettingsWidget extends StatelessWidget {
           context,
           'Projeler Görünürlüğü',
           'Projelerinizi herkese açık yapın',
-          settings.isProjectsPublic,
+          settings.showProjects,
           (value) {
             onSettingsChanged(
-              settings.copyWith(isProjectsPublic: value),
+              settings.copyWith(showProjects: value),
             );
           },
         ),
@@ -95,10 +95,10 @@ class PrivacySettingsWidget extends StatelessWidget {
           context,
           'Sertifikalar Görünürlüğü',
           'Sertifikalarınızı herkese açık yapın',
-          settings.isCertificationsPublic,
+          settings.showCertifications,
           (value) {
             onSettingsChanged(
-              settings.copyWith(isCertificationsPublic: value),
+              settings.copyWith(showCertifications: value),
             );
           },
         ),

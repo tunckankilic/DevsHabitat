@@ -41,7 +41,7 @@ class ProfileHeader extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Text(
-                                  profile.fullName,
+                                  profile.displayName,
                                   style: Theme.of(context)
                                       .textTheme
                                       .headlineMedium
@@ -63,7 +63,7 @@ class ProfileHeader extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            profile.title,
+                            profile.displayName,
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -92,7 +92,7 @@ class ProfileHeader extends StatelessWidget {
                             const SizedBox(height: 8),
                           ],
                           if (profile.email != null &&
-                              profile.privacySettings.isEmailPublic) ...[
+                              profile.privacySettings.showEmail) ...[
                             Row(
                               children: [
                                 const Icon(

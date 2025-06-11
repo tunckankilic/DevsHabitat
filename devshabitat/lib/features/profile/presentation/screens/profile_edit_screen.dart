@@ -1,5 +1,12 @@
 import 'package:devshabitat/core/themes/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
+import '../bloc/profile_form_bloc.dart';
+import '../../../../core/services/firebase_service.dart';
+import '../../domain/models/developer_profile.dart';
 
 import '../widgets/profile_completion_indicator.dart';
 import '../widgets/navigation_buttons.dart';
@@ -20,7 +27,45 @@ class ProfileEditScreen extends StatefulWidget {
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
   final PageController _pageController = PageController();
+  final FirebaseService _firebaseService = FirebaseService();
   int _currentStep = 0;
+  String? _profileImageUrl;
+
+  Future<void> _uploadImage(String imagePath) async {
+    try {
+      final storageRef = _firebaseService.storage
+          .ref()
+          .child('profile_images')
+          .child('${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      final uploadTask = await storageRef.putFile(File(imagePath));
+      final downloadUrl = await uploadTask.ref.getDownloadURL();
+
+      setState(() {
+        _profileImageUrl = downloadUrl;
+      });
+
+      context.read<ProfileFormBloc>().add(
+            UpdateBasicInfo(
+              displayName: '', // Mevcut değerleri koruyun
+              profileImageUrl: downloadUrl,
+            ),
+          );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Resim yüklenirken hata oluştu: $e')),
+      );
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      await _uploadImage(pickedFile.path);
+    }
+  }
 
   @override
   void dispose() {
@@ -38,7 +83,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         _currentStep++;
       });
     } else {
-      // TODO: Implement save functionality
+      context.read<ProfileFormBloc>().add(SaveProfile());
     }
   }
 
@@ -133,9 +178,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           const SizedBox(height: 24),
           ImageUploadWidget(
             aspectRatio: 1,
-            onImageSelected: (file) {
-              // TODO: Implement image upload
-            },
+            currentImageUrl: _profileImageUrl,
+            onImageSelected: _uploadImage,
           ),
           const SizedBox(height: 24),
           TextFormField(
@@ -191,31 +235,25 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
           ),
           const SizedBox(height: 24),
-          DropdownButtonFormField<String>(
+          DropdownButtonFormField<ExperienceLevel>(
             decoration: const InputDecoration(
               labelText: 'Deneyim Seviyesi',
               border: OutlineInputBorder(),
             ),
-            items: const [
-              DropdownMenuItem(
-                value: 'JUNIOR',
-                child: Text('Junior'),
-              ),
-              DropdownMenuItem(
-                value: 'MID_LEVEL',
-                child: Text('Mid Level'),
-              ),
-              DropdownMenuItem(
-                value: 'SENIOR',
-                child: Text('Senior'),
-              ),
-              DropdownMenuItem(
-                value: 'LEAD',
-                child: Text('Lead'),
-              ),
-            ],
+            items: ExperienceLevel.values.map((level) {
+              return DropdownMenuItem(
+                value: level,
+                child: Text(level.toString().split('.').last),
+              );
+            }).toList(),
             onChanged: (value) {
-              // TODO: Implement experience level change
+              if (value != null) {
+                context.read<ProfileFormBloc>().add(
+                      UpdateProfessionalDetails(
+                        experienceLevel: value,
+                      ),
+                    );
+              }
             },
           ),
           const SizedBox(height: 16),
@@ -347,14 +385,19 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           PrivacySettingsWidget(
             settings: ProfilePrivacySettings(
               isProfilePublic: true,
-              isEmailPublic: false,
-              isGitHubPublic: true,
-              isProjectsPublic: true,
-              isCertificationsPublic: true,
-              isSocialLinksPublic: true,
+              showEmail: false,
+              showLocation: true,
+              showSocialLinks: true,
+              showGitHubStats: true,
+              showProjects: true,
+              showCertifications: true,
+              allowMessages: true,
+              showOnlineStatus: true,
             ),
             onSettingsChanged: (settings) {
-              // TODO: Implement privacy settings update
+              context.read<ProfileFormBloc>().add(
+                    UpdatePrivacySettings(settings),
+                  );
             },
           ),
         ],

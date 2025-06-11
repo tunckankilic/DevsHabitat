@@ -61,15 +61,24 @@ class AuthRepositoryImpl implements AuthRepository {
     String newProvider,
   ) async {
     try {
-      final signInMethods =
-          await _firebaseService.auth.fetchSignInMethodsForEmail(email);
+      final actionCodeSettings = firebase_auth.ActionCodeSettings(
+        url: 'https://devshabitat.page.link/account-linking',
+        handleCodeInApp: true,
+        androidPackageName: 'com.devsHabitat.app',
+        androidInstallApp: true,
+        androidMinimumVersion: '1',
+        iOSBundleId: 'com.devsHabitat.app',
+      );
+
+      await _firebaseService.auth.sendSignInLinkToEmail(
+        email: email,
+        actionCodeSettings: actionCodeSettings,
+      );
 
       return Right({
         'email': email,
-        'existingProviders': signInMethods,
         'newProvider': newProvider,
-        'suggestion':
-            'Bu e-posta adresi zaten kayıtlı. Mevcut hesabınıza $newProvider hesabınızı bağlamak ister misiniz?',
+        'suggestion': 'Hesap bağlama bağlantısı e-posta adresinize gönderildi.',
       });
     } catch (e) {
       return Left(Exception('Hesap bağlama önerisi oluşturulamadı'));
@@ -86,8 +95,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final updatedUser = User(
         id: existingUser.id,
         email: existingUser.email,
-        name: existingUser.name,
-        avatar: existingUser.avatar ?? userCredential.user!.photoURL,
+        displayName: existingUser.displayName,
+        photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
         skills: existingUser.skills,
         experience: existingUser.experience,
         preferences: existingUser.preferences,
@@ -302,26 +311,22 @@ class AuthRepositoryImpl implements AuthRepository {
           // E-posta adresini al ve mevcut provider'ları göster
           final email = e.email;
           if (email != null) {
-            final providers =
-                await _firebaseService.auth.fetchSignInMethodsForEmail(email);
-            final providersString = providers.map((method) {
-              switch (method) {
-                case 'password':
-                  return 'E-posta/Şifre';
-                case 'google.com':
-                  return 'Google';
-                case 'github.com':
-                  return 'GitHub';
-                case 'facebook.com':
-                  return 'Facebook';
-                case 'apple.com':
-                  return 'Apple';
-                default:
-                  return method;
-              }
-            }).join(', ');
+            final actionCodeSettings = firebase_auth.ActionCodeSettings(
+              url: 'https://devshabitat.page.link/account-linking',
+              handleCodeInApp: true,
+              androidPackageName: 'com.devsHabitat.app',
+              androidInstallApp: true,
+              androidMinimumVersion: '1',
+              iOSBundleId: 'com.devsHabitat.app',
+            );
+
+            await _firebaseService.auth.sendSignInLinkToEmail(
+              email: email,
+              actionCodeSettings: actionCodeSettings,
+            );
+
             errorMessage =
-                'Bu e-posta adresi zaten kayıtlı. Mevcut giriş yöntemleriniz: $providersString';
+                'Hesap bağlama bağlantısı e-posta adresinize gönderildi.';
           } else {
             errorMessage = 'Bu e-posta adresi farklı bir yöntemle kayıtlı';
           }
@@ -601,8 +606,8 @@ class AuthRepositoryImpl implements AuthRepository {
         final updatedUser = User(
           id: existingUser.id,
           email: existingUser.email,
-          name: existingUser.name,
-          avatar: existingUser.avatar,
+          displayName: existingUser.displayName,
+          photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
           skills: existingUser.skills,
           experience: existingUser.experience,
           preferences: existingUser.preferences,
@@ -637,8 +642,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final newUser = User(
         id: firebaseUser.uid,
         email: firebaseUser.email ?? 'no-email@apple.com',
-        name: displayName,
-        avatar: firebaseUser.photoURL,
+        displayName: displayName,
+        photoURL: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -690,7 +695,7 @@ class AuthRepositoryImpl implements AuthRepository {
           final newUser = User(
             id: userCredential.user!.uid,
             email: email,
-            name: name,
+            displayName: name,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           );
@@ -897,8 +902,8 @@ class AuthRepositoryImpl implements AuthRepository {
         final updatedUser = User(
           id: existingUser.id,
           email: existingUser.email,
-          name: existingUser.name,
-          avatar: existingUser.avatar,
+          displayName: existingUser.displayName,
+          photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
           skills: existingUser.skills,
           experience: existingUser.experience,
           preferences: existingUser.preferences,
@@ -924,8 +929,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final newUser = User(
         id: firebaseUser.uid,
         email: firebaseUser.email ?? 'no-email@$provider.com',
-        name: _getDisplayName(firebaseUser, userCredential, provider),
-        avatar: firebaseUser.photoURL,
+        displayName: _getDisplayName(firebaseUser, userCredential, provider),
+        photoURL: firebaseUser.photoURL,
         lastSeen: DateTime.now(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

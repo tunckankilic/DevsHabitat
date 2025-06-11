@@ -2,57 +2,62 @@ import 'package:equatable/equatable.dart';
 
 class Certification extends Equatable {
   final String id;
-  final String name;
+  final String title;
   final String issuer;
+  final String? description;
+  final String? credentialUrl;
   final DateTime issueDate;
   final DateTime? expiryDate;
-  final String? credentialUrl;
   final String? credentialId;
 
   const Certification({
     required this.id,
-    required this.name,
+    required this.title,
     required this.issuer,
+    this.description,
+    this.credentialUrl,
     required this.issueDate,
     this.expiryDate,
-    this.credentialUrl,
     this.credentialId,
   });
-
-  factory Certification.fromMap(Map<String, dynamic> map) {
-    return Certification(
-      id: map['id'] as String,
-      name: map['name'] as String,
-      issuer: map['issuer'] as String,
-      issueDate: DateTime.parse(map['issueDate'] as String),
-      expiryDate: map['expiryDate'] != null
-          ? DateTime.parse(map['expiryDate'] as String)
-          : null,
-      credentialUrl: map['credentialUrl'] as String?,
-      credentialId: map['credentialId'] as String?,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'issuer': issuer,
-      'issueDate': issueDate.toIso8601String(),
-      'expiryDate': expiryDate?.toIso8601String(),
-      'credentialUrl': credentialUrl,
-      'credentialId': credentialId,
-    };
-  }
 
   @override
   List<Object?> get props => [
         id,
-        name,
+        title,
         issuer,
+        description,
+        credentialUrl,
         issueDate,
         expiryDate,
-        credentialUrl,
         credentialId,
       ];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'issuer': issuer,
+      'description': description,
+      'credentialUrl': credentialUrl,
+      'issueDate': issueDate.toIso8601String(),
+      'expiryDate': expiryDate?.toIso8601String(),
+      'credentialId': credentialId,
+    };
+  }
+
+  factory Certification.fromJson(Map<String, dynamic> json) {
+    return Certification(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      issuer: json['issuer'] as String,
+      description: json['description'] as String?,
+      credentialUrl: json['credentialUrl'] as String?,
+      issueDate: DateTime.parse(json['issueDate'] as String),
+      expiryDate: json['expiryDate'] != null
+          ? DateTime.parse(json['expiryDate'] as String)
+          : null,
+      credentialId: json['credentialId'] as String?,
+    );
+  }
 }

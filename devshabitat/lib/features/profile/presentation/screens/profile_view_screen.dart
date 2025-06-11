@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/presentation/widgets/responsive_base.dart';
+import '../bloc/profile_form_bloc.dart';
+import '../../domain/models/developer_profile.dart';
 
 class ProfileViewScreen extends StatelessWidget {
   final String userId;
@@ -13,14 +15,21 @@ class ProfileViewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBase(
-      mobile: _buildMobileLayout(),
-      tablet: _buildTabletLayout(),
-      desktop: _buildDesktopLayout(),
+    return BlocBuilder<ProfileFormBloc, ProfileFormState>(
+      builder: (context, state) {
+        if (state is ProfileFormLoaded) {
+          return ResponsiveBase(
+            mobile: _buildMobileLayout(state.developerProfile),
+            tablet: _buildTabletLayout(state.developerProfile),
+            desktop: _buildDesktopLayout(state.developerProfile),
+          );
+        }
+        return const Center(child: CircularProgressIndicator());
+      },
     );
   }
 
-  Widget _buildMobileLayout() {
+  Widget _buildMobileLayout(DeveloperProfile profile) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
@@ -28,9 +37,9 @@ class ProfileViewScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildProfileHeader(),
+              _buildProfileHeader(profile),
               SizedBox(height: 16.h),
-              _buildProfileContent(),
+              _buildProfileContent(profile),
             ],
           ),
         ),
@@ -38,20 +47,20 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTabletLayout() {
+  Widget _buildTabletLayout(DeveloperProfile profile) {
     return Scaffold(
       body: Row(
         children: [
           Expanded(
             flex: 1,
-            child: _buildProfileHeader(),
+            child: _buildProfileHeader(profile),
           ),
           Expanded(
             flex: 2,
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(24.w),
-                child: _buildProfileContent(),
+                child: _buildProfileContent(profile),
               ),
             ),
           ),
@@ -60,20 +69,20 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopLayout() {
+  Widget _buildDesktopLayout(DeveloperProfile profile) {
     return Scaffold(
       body: Row(
         children: [
           Expanded(
             flex: 1,
-            child: _buildProfileHeader(),
+            child: _buildProfileHeader(profile),
           ),
           Expanded(
             flex: 3,
             child: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.all(32.w),
-                child: _buildProfileContent(),
+                child: _buildProfileContent(profile),
               ),
             ),
           ),
@@ -82,7 +91,7 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileHeader() {
+  Widget _buildProfileHeader(DeveloperProfile profile) {
     return Container(
       padding: EdgeInsets.all(16.w),
       child: Column(
@@ -90,11 +99,16 @@ class ProfileViewScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 50.r,
-            // TODO: Add profile image
+            backgroundImage: profile.profileImageUrl != null
+                ? NetworkImage(profile.profileImageUrl!)
+                : null,
+            child: profile.profileImageUrl == null
+                ? Icon(Icons.person, size: 50.r)
+                : null,
           ),
           SizedBox(height: 16.h),
           Text(
-            'Profile Name',
+            profile.displayName,
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
@@ -105,24 +119,27 @@ class ProfileViewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileContent() {
+  Widget _buildProfileContent(DeveloperProfile profile) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSection(
-          title: 'About',
-          content: 'Profile description goes here',
-        ),
+        if (profile.bio != null)
+          _buildSection(
+            title: 'Hakkımda',
+            content: profile.bio!,
+          ),
         SizedBox(height: 24.h),
-        _buildSection(
-          title: 'Skills',
-          content: 'Skills list goes here',
-        ),
+        if (profile.skills.isNotEmpty)
+          _buildSection(
+            title: 'Yetenekler',
+            content: profile.skills.join(', '),
+          ),
         SizedBox(height: 24.h),
-        _buildSection(
-          title: 'Projects',
-          content: 'Projects list goes here',
-        ),
+        if (profile.projects.isNotEmpty)
+          _buildSection(
+            title: 'Projeler',
+            content: profile.projects.map((p) => p.title).join('\n'),
+          ),
       ],
     );
   }

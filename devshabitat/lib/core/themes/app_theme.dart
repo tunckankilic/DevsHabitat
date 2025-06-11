@@ -42,8 +42,8 @@ class DevHabitatTheme {
           ? [
               BoxShadow(
                 color: isDark
-                    ? Colors.black.withOpacity(0.3)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.black.withAlpha(77)
+                    : Colors.black.withAlpha(26),
                 blurRadius: 8,
                 spreadRadius: 0,
                 offset: const Offset(2, 2),
@@ -52,16 +52,16 @@ class DevHabitatTheme {
           : [
               BoxShadow(
                 color: isDark
-                    ? Colors.black.withOpacity(0.5)
-                    : Colors.black.withOpacity(0.1),
+                    ? Colors.black.withAlpha(128)
+                    : Colors.black.withAlpha(26),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(8, 8),
               ),
               BoxShadow(
                 color: isDark
-                    ? Colors.white.withOpacity(0.05)
-                    : Colors.white.withOpacity(0.8),
+                    ? Colors.white.withAlpha(13)
+                    : Colors.white.withAlpha(204),
                 blurRadius: 20,
                 spreadRadius: 0,
                 offset: const Offset(-8, -8),
@@ -189,7 +189,7 @@ class DevHabitatTheme {
       ),
 
       // App Bar Theme
-      appBarTheme: AppBarTheme(
+      appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
         scrolledUnderElevation: 0,
