@@ -1,6 +1,6 @@
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
+import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:devshabitat/core/themes/colors.dart';
-import 'package:devshabitat/core/themes/app_theme.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/glass_login_card.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/loading_overlay.dart';
 import 'package:go_router/go_router.dart';
@@ -177,7 +177,7 @@ class ResponsiveLoginScreen extends StatelessWidget {
       children: [
         Text(
           'DevHabitat',
-          style: DevHabitatTheme.headingLarge.copyWith(
+          style: DevHabitatTheme.headlineLarge.copyWith(
             color: DevHabitatColors.textPrimary,
           ),
         ),

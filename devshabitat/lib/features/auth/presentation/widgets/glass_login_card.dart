@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:devshabitat/core/themes/app_theme.dart';
-import 'package:devshabitat/core/themes/colors.dart';
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
+import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/email_password_form.dart';
 import 'package:devshabitat/features/auth/presentation/widgets/social_login_section.dart';
@@ -20,11 +20,7 @@ class GlassLoginCard extends StatelessWidget {
           constraints: const BoxConstraints(
             maxWidth: 400,
           ),
-          decoration: DevHabitatTheme.glassDecoration(
-            background: DevHabitatColors.glassBackground,
-            border: DevHabitatColors.glassBorder,
-            borderRadius: 24,
-          ),
+          decoration: DevHabitatTheme.glassDecoration,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(24),
             child: BackdropFilter(
@@ -37,7 +33,7 @@ class GlassLoginCard extends StatelessWidget {
                   children: [
                     Text(
                       'Welcome',
-                      style: DevHabitatTheme.headingMedium.copyWith(
+                      style: DevHabitatTheme.headlineMedium.copyWith(
                         color: DevHabitatColors.textPrimary,
                       ),
                       textAlign: TextAlign.center,

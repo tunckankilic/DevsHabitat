@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dev_habitat_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DevHabitatTheme {
   static ThemeData get darkTheme {
@@ -470,75 +471,102 @@ class DevHabitatTheme {
       );
 
   // Custom Text Styles
-  static TextStyle get codeTextStyle => TextStyle(
-        fontFamily: 'FiraCode',
+  static TextStyle get codeTextStyle => GoogleFonts.jetBrainsMono(
         fontSize: 14,
         color: DevHabitatColors.textPrimary,
         backgroundColor: DevHabitatColors.codeBackground,
       );
 
-  static TextStyle get skillTagTextStyle => TextStyle(
+  static TextStyle get skillTagTextStyle => GoogleFonts.roboto(
         fontSize: 12,
         fontWeight: FontWeight.w500,
         color: DevHabitatColors.primary,
       );
 
-  static TextStyle get usernameTextStyle => TextStyle(
+  static TextStyle get usernameTextStyle => GoogleFonts.roboto(
         fontSize: 16,
         fontWeight: FontWeight.bold,
         color: DevHabitatColors.textPrimary,
       );
 
-  static TextStyle get statusTextStyle => TextStyle(
+  static TextStyle get statusTextStyle => GoogleFonts.roboto(
         fontSize: 12,
         color: DevHabitatColors.textSecondary,
       );
 
-  static TextStyle get titleLarge => const TextStyle(
+  static TextStyle get titleLarge => GoogleFonts.roboto(
         fontSize: 24,
         fontWeight: FontWeight.bold,
         color: Colors.white,
       );
 
-  static TextStyle get titleMedium => const TextStyle(
+  static TextStyle get titleMedium => GoogleFonts.roboto(
         fontSize: 20,
         fontWeight: FontWeight.w600,
         color: Colors.white,
       );
 
-  static TextStyle get bodyLarge => const TextStyle(
+  static TextStyle get titleSmall => GoogleFonts.roboto(
+        fontSize: 16,
+        fontWeight: FontWeight.w200,
+        color: Colors.white,
+      );
+
+  static TextStyle get bodyLarge => GoogleFonts.roboto(
         fontSize: 16,
         fontWeight: FontWeight.normal,
         color: Colors.white,
       );
 
-  static TextStyle get bodyMedium => const TextStyle(
+  static TextStyle get bodyMedium => GoogleFonts.roboto(
         fontSize: 14,
         fontWeight: FontWeight.normal,
         color: Colors.white,
       );
 
-  static TextStyle get bodySmall => const TextStyle(
+  static TextStyle get bodySmall => GoogleFonts.roboto(
         fontSize: 12,
         fontWeight: FontWeight.normal,
         color: Colors.white,
       );
 
-  static TextStyle get labelLarge => const TextStyle(
+  static TextStyle get labelLarge => GoogleFonts.roboto(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: Colors.white,
       );
 
-  static TextStyle get labelMedium => const TextStyle(
+  static TextStyle get labelMedium => GoogleFonts.roboto(
         fontSize: 14,
         fontWeight: FontWeight.w500,
         color: Colors.white,
       );
 
-  static TextStyle get labelSmall => const TextStyle(
+  static TextStyle get labelSmall => GoogleFonts.roboto(
         fontSize: 12,
         fontWeight: FontWeight.w500,
+        color: Colors.white,
+      );
+
+  // Headline Styles
+  static TextStyle get headlineLarge => GoogleFonts.roboto(
+        fontSize: 32,
+        fontWeight: FontWeight.bold,
+        letterSpacing: -0.5,
+        color: Colors.white,
+      );
+
+  static TextStyle get headlineMedium => GoogleFonts.roboto(
+        fontSize: 28,
+        fontWeight: FontWeight.w600,
+        letterSpacing: -0.25,
+        color: Colors.white,
+      );
+
+  static TextStyle get headlineSmall => GoogleFonts.roboto(
+        fontSize: 24,
+        fontWeight: FontWeight.w500,
+        letterSpacing: 0,
         color: Colors.white,
       );
 }

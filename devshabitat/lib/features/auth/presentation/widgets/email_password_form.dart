@@ -1,6 +1,6 @@
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:devshabitat/core/themes/colors.dart';
 import 'package:devshabitat/core/widgets/gradient_button.dart';
 import 'package:devshabitat/features/auth/presentation/blocs/login/login_bloc.dart';
 
