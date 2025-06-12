@@ -179,7 +179,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           formData: formData,
         ));
       } else {
-        // Son adımda kayıt işlemini başlat
+        // Start registration process in the final step
         add(RegisterWithEmailAndPasswordRequested(
           email: formData['email'] as String,
           password: formData['password'] as String,

@@ -1,7 +1,7 @@
+import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
+import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
-import 'package:devshabitat/core/themes/colors.dart';
-import 'package:devshabitat/core/themes/app_theme.dart';
 
 class LoadingOverlay extends StatelessWidget {
   const LoadingOverlay({Key? key}) : super(key: key);
@@ -15,11 +15,7 @@ class LoadingOverlay extends StatelessWidget {
         child: Center(
           child: Container(
             padding: const EdgeInsets.all(24),
-            decoration: DevHabitatTheme.glassDecoration(
-              background: DevHabitatColors.glassBackground,
-              border: DevHabitatColors.glassBorder,
-              borderRadius: 16,
-            ),
+            decoration: DevHabitatTheme.glassDecoration,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -65,7 +65,7 @@ class AppRouter {
     errorBuilder: (context, state) => Scaffold(
       body: Center(
         child: Text(
-          'Sayfa bulunamadı: ${state.uri.path}',
+          'Page not found: ${state.uri.path}',
           style: Theme.of(context).textTheme.titleLarge,
         ),
       ),

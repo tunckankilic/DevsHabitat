@@ -55,7 +55,7 @@ class NavigationButtons extends StatelessWidget {
                 ),
               ),
               child: Text(
-                currentStep < 6 ? 'İleri' : 'Kaydet',
+                currentStep < 6 ? 'Next' : 'Save',
               ),
             ),
           ),

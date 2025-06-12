@@ -528,52 +528,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
         userCredential =
             await _firebaseService.auth.signInWithCredential(oauthCredential);
-
-        // Apple kimlik bilgileriyle kullanıcı oluştur veya güncelle
-        return await _createOrUpdateUserWithAppleData(
-            userCredential, appleCredential);
       } else {
         throw Exception('Apple Sign In bu platformda desteklenmiyor');
       }
 
       if (userCredential.user == null) {
         throw Exception('Apple kimlik doğrulaması başarısız');
-      }
-
-      // E-posta kontrolü
-      final userEmail = userCredential.user!.email;
-      if (userEmail != null) {
-        final emailCheckResult = await _checkEmailExists(userEmail);
-
-        return emailCheckResult.fold(
-          (error) => Left(error),
-          (emailExists) async {
-            if (emailExists) {
-              final existingUserResult = await _findUserByEmail(userEmail);
-              return existingUserResult.fold(
-                (error) => Left(error),
-                (existingUser) async {
-                  if (existingUser != null) {
-                    return await _updateExistingUserWithProvider(
-                        existingUser, userCredential, 'apple');
-                  } else {
-                    final linkingSuggestion =
-                        await _createAccountLinkingSuggestion(
-                            userEmail, 'Apple');
-
-                    return linkingSuggestion.fold(
-                      (error) => Left(error),
-                      (suggestion) => Left(Exception(
-                          'ACCOUNT_LINKING_REQUIRED|${suggestion['suggestion']}')),
-                    );
-                  }
-                },
-              );
-            } else {
-              return await _createOrUpdateUser(userCredential, 'apple');
-            }
-          },
-        );
       }
 
       return await _createOrUpdateUser(userCredential, 'apple');
@@ -583,303 +543,6 @@ class AuthRepositoryImpl implements AuthRepository {
       _logger.e('Apple ile giriş hatası: ${e.toString()}');
       return Left(Exception('Apple girişi başarısız: ${e.toString()}'));
     }
-  }
-
-  // Special helper for Apple Sign In with credential data
-  Future<Either<Exception, User>> _createOrUpdateUserWithAppleData(
-    firebase_auth.UserCredential userCredential,
-    AuthorizationCredentialAppleID appleCredential,
-  ) async {
-    try {
-      final firebaseUser = userCredential.user!;
-
-      // Check if user already exists
-      final userDoc = await _firebaseService.firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .get();
-
-      if (userDoc.exists) {
-        final existingUser = User.fromJson(userDoc.data()!);
-
-        // Update last seen
-        final updatedUser = User(
-          id: existingUser.id,
-          email: existingUser.email,
-          displayName: existingUser.displayName,
-          photoURL: existingUser.photoURL ?? userCredential.user!.photoURL,
-          skills: existingUser.skills,
-          experience: existingUser.experience,
-          preferences: existingUser.preferences,
-          connections: existingUser.connections,
-          lastSeen: DateTime.now(),
-          githubUsername: existingUser.githubUsername,
-          githubAvatarUrl: existingUser.githubAvatarUrl,
-          githubId: existingUser.githubId,
-          githubData: existingUser.githubData,
-          createdAt: existingUser.createdAt,
-          updatedAt: DateTime.now(),
-        );
-
-        await _firebaseService.firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .update({'lastSeen': updatedUser.lastSeen?.toIso8601String()});
-
-        return Right(updatedUser);
-      }
-
-      // Create new user with Apple data
-      final fullName =
-          '${appleCredential.givenName ?? ''} ${appleCredential.familyName ?? ''}'
-              .trim();
-      final displayName = fullName.isEmpty
-          ? (firebaseUser.displayName ??
-              firebaseUser.email?.split('@').first ??
-              'İsimsiz Kullanıcı')
-          : fullName;
-
-      final newUser = User(
-        id: firebaseUser.uid,
-        email: firebaseUser.email ?? 'no-email@apple.com',
-        displayName: displayName,
-        photoURL: firebaseUser.photoURL,
-        lastSeen: DateTime.now(),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      await _firebaseService.firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .set(newUser.toJson());
-
-      return Right(newUser);
-    } catch (e) {
-      _logger.e('Apple user creation error: ${e.toString()}');
-      return Left(
-          Exception('Kullanıcı profili oluşturulamadı: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, User>> registerWithEmailAndPassword(
-    String email,
-    String password,
-    String name,
-  ) async {
-    try {
-      // İlk olarak e-posta kontrolü yap
-      final emailCheckResult = await _checkEmailExists(email);
-
-      return emailCheckResult.fold(
-        (error) => Left(error),
-        (emailExists) async {
-          if (emailExists) {
-            return Left(Exception('Bu e-posta adresi zaten kullanımda'));
-          }
-
-          final userCredential =
-              await _firebaseService.auth.createUserWithEmailAndPassword(
-            email: email,
-            password: password,
-          );
-
-          if (userCredential.user == null) {
-            throw Exception('Kullanıcı oluşturulamadı');
-          }
-
-          // Update display name
-          await userCredential.user!.updateDisplayName(name);
-
-          final newUser = User(
-            id: userCredential.user!.uid,
-            email: email,
-            displayName: name,
-            createdAt: DateTime.now(),
-            updatedAt: DateTime.now(),
-          );
-
-          await _firebaseService.firestore
-              .collection('users')
-              .doc(userCredential.user!.uid)
-              .set(newUser.toJson());
-
-          // Send email verification
-          await userCredential.user!.sendEmailVerification();
-
-          return Right(newUser);
-        },
-      );
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      _logger.e('Kayıt hatası: ${e.code} - ${e.message}');
-
-      String errorMessage;
-      switch (e.code) {
-        case 'weak-password':
-          errorMessage = 'Şifre çok zayıf. Lütfen daha güçlü bir şifre seçin';
-          break;
-        case 'email-already-in-use':
-          errorMessage = 'Bu e-posta adresi zaten kullanımda';
-          break;
-        case 'invalid-email':
-          errorMessage = 'Geçersiz e-posta adresi';
-          break;
-        case 'operation-not-allowed':
-          errorMessage = 'E-posta/şifre ile kayıt etkin değil';
-          break;
-        case 'network-request-failed':
-          errorMessage = 'İnternet bağlantınızı kontrol edin';
-          break;
-        default:
-          errorMessage = 'Kayıt başarısız: ${e.message}';
-      }
-
-      return Left(Exception(errorMessage));
-    } catch (e) {
-      _logger.e('Kayıt hatası: ${e.toString()}');
-      return Left(Exception('Kayıt başarısız: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> signOut() async {
-    try {
-      // Sign out from all providers
-      await Future.wait([
-        _firebaseService.auth.signOut(),
-        if (!kIsWeb) GoogleSignIn().signOut(),
-        if (!kIsWeb) FacebookAuth.instance.logOut(),
-      ]);
-
-      return const Right(null);
-    } catch (e) {
-      _logger.e('Çıkış hatası: ${e.toString()}');
-      return Left(Exception('Çıkış başarısız: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, User?>> getCurrentUser() async {
-    try {
-      final firebaseUser = _firebaseService.auth.currentUser;
-      if (firebaseUser == null) {
-        return const Right(null);
-      }
-
-      final userDoc = await _firebaseService.firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .get();
-
-      if (!userDoc.exists) {
-        return const Right(null);
-      }
-
-      return Right(User.fromJson(userDoc.data()!));
-    } catch (e) {
-      _logger.e('Mevcut kullanıcı alma hatası: ${e.toString()}');
-      return Left(Exception('Kullanıcı bilgileri alınamadı: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> updateUserProfile(User user) async {
-    try {
-      await _firebaseService.firestore
-          .collection('users')
-          .doc(user.id)
-          .update(user.toJson());
-      return const Right(null);
-    } catch (e) {
-      _logger.e('Profil güncelleme hatası: ${e.toString()}');
-      return Left(Exception('Profil güncellenemedi: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> updateUserPreferences(
-      Map<String, dynamic> preferences) async {
-    try {
-      final user = _firebaseService.auth.currentUser;
-      if (user == null) {
-        throw Exception('Kullanıcı oturum açmamış');
-      }
-
-      await _firebaseService.firestore
-          .collection('users')
-          .doc(user.uid)
-          .update({'preferences': preferences});
-      return const Right(null);
-    } catch (e) {
-      _logger.e('Tercihleri güncelleme hatası: ${e.toString()}');
-      return Left(Exception('Tercihler güncellenemedi: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> addConnection(String userId) async {
-    try {
-      final currentUser = _firebaseService.auth.currentUser;
-      if (currentUser == null) {
-        throw Exception('Kullanıcı oturum açmamış');
-      }
-
-      await _firebaseService.firestore
-          .collection('users')
-          .doc(currentUser.uid)
-          .update({
-        'connections': FieldValue.arrayUnion([userId])
-      });
-      return const Right(null);
-    } catch (e) {
-      _logger.e('Bağlantı ekleme hatası: ${e.toString()}');
-      return Left(Exception('Bağlantı eklenemedi: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Future<Either<Exception, void>> removeConnection(String userId) async {
-    try {
-      final currentUser = _firebaseService.auth.currentUser;
-      if (currentUser == null) {
-        throw Exception('Kullanıcı oturum açmamış');
-      }
-
-      await _firebaseService.firestore
-          .collection('users')
-          .doc(currentUser.uid)
-          .update({
-        'connections': FieldValue.arrayRemove([userId])
-      });
-      return const Right(null);
-    } catch (e) {
-      _logger.e('Bağlantı silme hatası: ${e.toString()}');
-      return Left(Exception('Bağlantı silinemedi: ${e.toString()}'));
-    }
-  }
-
-  @override
-  Stream<User?> get userStream {
-    return _firebaseService.auth
-        .authStateChanges()
-        .asyncMap((firebaseUser) async {
-      if (firebaseUser == null) return null;
-
-      try {
-        final userDoc = await _firebaseService.firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .get();
-
-        if (!userDoc.exists) return null;
-
-        return User.fromJson(userDoc.data()!);
-      } catch (e) {
-        _logger.e('User stream error: ${e.toString()}');
-        return null;
-      }
-    });
   }
 
   // Helper method to create or update user
@@ -1406,5 +1069,173 @@ class AuthRepositoryImpl implements AuthRepository {
   DateTime? get lastSignInTime {
     final user = _firebaseService.auth.currentUser;
     return user?.metadata.lastSignInTime;
+  }
+
+  @override
+  Future<Either<Exception, User>> registerWithEmailAndPassword(
+    String email,
+    String password,
+    String name,
+  ) async {
+    try {
+      final userCredential =
+          await _firebaseService.auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCredential.user == null) {
+        throw Exception('Kullanıcı oluşturulamadı');
+      }
+
+      await userCredential.user!.updateDisplayName(name);
+
+      final newUser = User(
+        id: userCredential.user!.uid,
+        email: email,
+        displayName: name,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set(newUser.toJson());
+
+      await userCredential.user!.sendEmailVerification();
+
+      return Right(newUser);
+    } catch (e) {
+      return Left(Exception('Kayıt başarısız: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, User?>> getCurrentUser() async {
+    try {
+      final firebaseUser = _firebaseService.auth.currentUser;
+      if (firebaseUser == null) {
+        return const Right(null);
+      }
+
+      final userDoc = await _firebaseService.firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        return const Right(null);
+      }
+
+      return Right(User.fromJson(userDoc.data()!));
+    } catch (e) {
+      return Left(Exception('Kullanıcı bilgileri alınamadı: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> addConnection(String userId) async {
+    try {
+      final currentUser = _firebaseService.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Kullanıcı oturum açmamış');
+      }
+
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({
+        'connections': FieldValue.arrayUnion([userId])
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(Exception('Bağlantı eklenemedi: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> removeConnection(String userId) async {
+    try {
+      final currentUser = _firebaseService.auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('Kullanıcı oturum açmamış');
+      }
+
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .update({
+        'connections': FieldValue.arrayRemove([userId])
+      });
+      return const Right(null);
+    } catch (e) {
+      return Left(Exception('Bağlantı silinemedi: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> updateUserProfile(User user) async {
+    try {
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(user.id)
+          .update(user.toJson());
+      return const Right(null);
+    } catch (e) {
+      return Left(Exception('Profil güncellenemedi: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Future<Either<Exception, void>> updateUserPreferences(
+      Map<String, dynamic> preferences) async {
+    try {
+      final user = _firebaseService.auth.currentUser;
+      if (user == null) {
+        throw Exception('Kullanıcı oturum açmamış');
+      }
+
+      await _firebaseService.firestore
+          .collection('users')
+          .doc(user.uid)
+          .update({'preferences': preferences});
+      return const Right(null);
+    } catch (e) {
+      return Left(Exception('Tercihler güncellenemedi: ${e.toString()}'));
+    }
+  }
+
+  @override
+  Stream<User?> get userStream {
+    return _firebaseService.auth
+        .authStateChanges()
+        .asyncMap((firebaseUser) async {
+      if (firebaseUser == null) return null;
+
+      try {
+        final userDoc = await _firebaseService.firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .get();
+
+        if (!userDoc.exists) return null;
+
+        return User.fromJson(userDoc.data()!);
+      } catch (e) {
+        _logger.e('User stream error: ${e.toString()}');
+        return null;
+      }
+    });
+  }
+
+  @override
+  Future<Either<Exception, void>> signOut() async {
+    try {
+      await _firebaseService.auth.signOut();
+      return const Right(null);
+    } catch (e) {
+      return Left(Exception('Çıkış yapılamadı: ${e.toString()}'));
+    }
   }
 }

@@ -6,6 +6,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import '../entities/message.dart';
 import '../entities/conversation.dart';
 
+class MessagingException implements Exception {
+  final String message;
+
+  MessagingException(this.message);
+
+  @override
+  String toString() => message;
+}
+
 abstract class MessagingRepository {
   Stream<List<Conversation>> getConversations(String userId);
   Stream<List<Message>> getMessages(String conversationId);

@@ -48,7 +48,7 @@ class GitHubSignInButton extends StatelessWidget {
                 ),
               const SizedBox(width: 12),
               const Text(
-                'GitHub ile Giriş Yap',
+                'Sign in with GitHub',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

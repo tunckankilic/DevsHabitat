@@ -11,10 +11,10 @@ final getIt = GetIt.instance;
   asExtension: true,
 )
 Future<void> configureDependencies() async {
-  // SharedPreferences'ı başlat
+  // Initialize SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(sharedPreferences);
 
-  // Diğer bağımlılıkları başlat
+  // Initialize other dependencies
   getIt.init();
 }

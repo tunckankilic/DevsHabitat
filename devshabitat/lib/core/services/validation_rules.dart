@@ -1,122 +1,114 @@
 import 'package:http/http.dart' as http;
 
 class ProfileValidation {
-  static String? validateDisplayName(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'İsim gereklidir';
+  static String? validateName(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Name is required';
     }
-    if (value.trim().length < 2) {
-      return 'İsim en az 2 karakter olmalıdır';
+    if (value.length < 2) {
+      return 'Name must be at least 2 characters';
     }
-    if (value.trim().length > 50) {
-      return 'İsim en fazla 50 karakter olabilir';
+    if (value.length > 50) {
+      return 'Name cannot exceed 50 characters';
     }
     return null;
   }
 
   static String? validateBio(String? value) {
-    if (value != null && value.length > 500) {
-      return 'Biyografi en fazla 500 karakter olabilir';
+    if (value == null || value.isEmpty) {
+      return null;
     }
-    if (value != null && value.length < 10) {
-      return 'Biyografi en az 10 karakter olmalıdır';
+    if (value.length < 10) {
+      return 'Bio must be at least 10 characters';
     }
     return null;
   }
 
-  static String? validateCurrentRole(String? value) {
-    if (value != null && value.trim().isNotEmpty) {
-      if (value.trim().length < 2) {
-        return 'Rol en az 2 karakter olmalıdır';
-      }
-      if (value.trim().length > 100) {
-        return 'Rol en fazla 100 karakter olabilir';
-      }
+  static String? validateRole(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    if (value.length < 2) {
+      return 'Role must be at least 2 characters';
     }
     return null;
   }
 
   static String? validateCompany(String? value) {
-    if (value != null && value.trim().isNotEmpty) {
-      if (value.trim().length < 2) {
-        return 'Şirket adı en az 2 karakter olmalıdır';
-      }
-      if (value.trim().length > 100) {
-        return 'Şirket adı en fazla 100 karakter olabilir';
-      }
+    if (value == null || value.isEmpty) {
+      return null;
+    }
+    if (value.length < 2) {
+      return 'Company name must be at least 2 characters';
+    }
+    if (value.length > 100) {
+      return 'Company name cannot exceed 100 characters';
     }
     return null;
   }
 
   static String? validateSkills(List<String> skills) {
-    if (skills.length < 3) {
-      return 'En az 3 beceri seçmelisiniz';
+    if (skills.isEmpty) {
+      return 'Please select at least 3 skills';
     }
     if (skills.length > 20) {
-      return 'En fazla 20 beceri seçebilirsiniz';
+      return 'You can select up to 20 skills';
     }
     return null;
   }
 
-  static Future<String?> validateGitHubUsername(String? value) async {
-    if (value == null || value.trim().isEmpty) {
-      return null; // Optional field
+  static String? validateGitHubUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return null;
     }
-
-    // Basic format validation
-    if (!RegExp(r'^[a-zA-Z0-9]([a-zA-Z0-9]|-)*[a-zA-Z0-9]$').hasMatch(value)) {
-      return 'Geçersiz GitHub kullanıcı adı formatı';
+    final regex = RegExp(r'^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$');
+    if (!regex.hasMatch(value)) {
+      return 'Invalid GitHub username format';
     }
+    return null;
+  }
 
-    // GitHub API validation
+  static Future<String?> validateGitHubUser(String username) async {
     try {
       final response = await http.get(
-        Uri.parse('https://api.github.com/users/$value'),
-        headers: {'Accept': 'application/vnd.github.v3+json'},
+        Uri.parse('https://api.github.com/users/$username'),
       );
-
       if (response.statusCode == 404) {
-        return 'GitHub kullanıcısı bulunamadı';
+        return 'GitHub user not found';
       }
       if (response.statusCode != 200) {
-        return 'GitHub kullanıcısı doğrulanamadı';
+        return 'Could not verify GitHub user';
       }
       return null;
     } catch (e) {
-      return 'GitHub bağlantı hatası';
+      return 'GitHub connection error';
     }
   }
 
-  static String? validateSocialUrl(String? value, String platform) {
-    if (value == null || value.trim().isEmpty) {
-      return null; // Optional field
+  static String? validateSocialLink(String? value, String platform) {
+    if (value == null || value.isEmpty) {
+      return null;
     }
-
-    final url = value.trim();
-    final Map<String, String> patterns = {
-      'linkedin': r'https?://(www\.)?linkedin\.com/in/[a-zA-Z0-9-]+/?',
-      'twitter': r'https?://(www\.)?twitter\.com/[a-zA-Z0-9_]+/?',
-      'website': r'https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/?.*',
-    };
-
-    if (patterns.containsKey(platform.toLowerCase())) {
-      if (!RegExp(patterns[platform.toLowerCase()]!).hasMatch(url)) {
-        return '$platform URL formatı geçersiz';
+    try {
+      final uri = Uri.parse(value);
+      if (!uri.hasScheme || !uri.hasAuthority) {
+        return 'Invalid $platform URL format';
       }
+      return null;
+    } catch (e) {
+      return 'Invalid $platform URL format';
     }
-
-    return null;
   }
 
   static String? validateProjectTitle(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'Proje başlığı gereklidir';
+    if (value == null || value.isEmpty) {
+      return 'Project title is required';
     }
-    if (value.trim().length < 3) {
-      return 'Proje başlığı en az 3 karakter olmalıdır';
+    if (value.length < 3) {
+      return 'Project title must be at least 3 characters';
     }
-    if (value.trim().length > 100) {
-      return 'Proje başlığı en fazla 100 karakter olabilir';
+    if (value.length > 100) {
+      return 'Project title cannot exceed 100 characters';
     }
     return null;
   }

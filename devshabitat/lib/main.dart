@@ -4,19 +4,19 @@ import 'package:devshabitat/core/injection/injection.dart';
 import 'package:devshabitat/core/config/routes/app_router.dart';
 import 'package:devshabitat/core/theme/devhabitat_theme.dart';
 import 'package:devshabitat/core/services/firebase_service.dart';
+import 'package:devshabitat/core/services/firebase_config_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Load environment variables
+  await dotenv.load(fileName: ".env-prod");
 
   // Initialize Firebase Service
   final firebaseService = FirebaseService();

@@ -122,7 +122,7 @@ class CertificationWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Bitiş: ${_formatDate(certification.expiryDate!)}',
+                    'Expiry: ${_formatDate(certification.expiryDate!)}',
                     style: const TextStyle(
                       color: DevHabitatColors.textSecondary,
                       fontSize: 12,

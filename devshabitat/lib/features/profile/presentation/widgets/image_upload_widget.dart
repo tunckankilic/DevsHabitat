@@ -40,14 +40,14 @@ class _ImageUploadWidgetState extends State<ImageUploadWidget> {
           ),
           uiSettings: [
             AndroidUiSettings(
-              toolbarTitle: 'Resmi Düzenle',
+              toolbarTitle: 'Edit Image',
               toolbarColor: DevHabitatColors.primary,
               toolbarWidgetColor: Colors.white,
               initAspectRatio: CropAspectRatioPreset.original,
               lockAspectRatio: false,
             ),
             IOSUiSettings(
-              title: 'Resmi Düzenle',
+              title: 'Edit Image',
             ),
           ],
         );

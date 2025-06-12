@@ -95,10 +95,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       String message;
       switch (e.code) {
         case 'email-already-in-use':
-          message = 'Bu e-posta adresi zaten kullanımda';
+          message = 'This email is already in use';
           break;
         case 'invalid-email':
-          message = 'Geçersiz e-posta adresi';
+          message = 'Invalid email address';
           break;
         case 'weak-password':
           message = 'Şifre çok zayıf';
