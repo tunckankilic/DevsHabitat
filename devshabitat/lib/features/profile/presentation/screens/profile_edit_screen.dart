@@ -47,13 +47,13 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
       context.read<ProfileFormBloc>().add(
             UpdateBasicInfo(
-              displayName: '', // Mevcut değerleri koruyun
+              displayName: '', // Keep existing values
               profileImageUrl: downloadUrl,
             ),
           );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Resim yüklenirken hata oluştu: $e')),
+        SnackBar(content: Text('Error uploading image: $e')),
       );
     }
   }
@@ -124,7 +124,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                     ),
                     const SizedBox(width: 16),
                     Text(
-                      'Profil Düzenle',
+                      'Edit Profile',
                       style:
                           Theme.of(context).textTheme.headlineSmall?.copyWith(
                                 color: Colors.white,
@@ -213,7 +213,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           TextFormField(
             maxLines: 3,
             decoration: const InputDecoration(
-              labelText: 'Hakkımda',
+              labelText: 'About Me',
               border: OutlineInputBorder(),
             ),
           ),
@@ -259,7 +259,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           const SizedBox(height: 16),
           TextFormField(
             decoration: const InputDecoration(
-              labelText: 'Şirket',
+              labelText: 'Company',
               border: OutlineInputBorder(),
             ),
           ),
@@ -376,7 +376,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Gizlilik Ayarları',
+            'Privacy Settings',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   color: Colors.white,
                 ),

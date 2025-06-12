@@ -40,29 +40,29 @@ class FirebaseService {
       _messaging = FirebaseMessaging.instance;
       _analytics = FirebaseAnalytics.instance;
 
-      // Firestore ayarları
+      // Firestore settings
       _firestore.settings = const Settings(
         persistenceEnabled: true,
         cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
       );
 
-      // FCM izinleri
+      // FCM permission request
       await _messaging.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
 
-      // FCM token'ı al
+      // Get FCM token
       final token = await _messaging.getToken();
       _logger.i('FCM Token: $token');
 
-      // İnternet bağlantısı kontrolü
+      // Check internet connection
       _internetChecker.onStatusChange.listen((status) {
-        _logger.i('İnternet bağlantısı durumu: $status');
+        _logger.i('Internet connection status: $status');
       });
     } catch (e, stackTrace) {
-      _logger.e('Firebase başlatma hatası: ${e.toString()}\n$stackTrace');
+      _logger.e('Firebase initialization error: ${e.toString()}\n$stackTrace');
       rethrow;
     }
   }

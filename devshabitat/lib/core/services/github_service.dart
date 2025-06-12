@@ -14,7 +14,7 @@ class GitHubService {
     if (response.statusCode == 200) {
       return GitHubUserData.fromJson(json.decode(response.body));
     }
-    throw Exception('GitHub kullanıcısı bulunamadı');
+    throw Exception('GitHub user not found');
   }
 
   Future<List<GitHubRepository>> fetchUserRepositories(String username,

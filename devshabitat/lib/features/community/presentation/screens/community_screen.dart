@@ -10,7 +10,7 @@ class CommunityScreen extends StatelessWidget {
         title: const Text('Topluluk'),
       ),
       body: const Center(
-        child: Text('Topluluk ekranı yakında'),
+        child: Text('Community screen coming soon'),
       ),
     );
   }

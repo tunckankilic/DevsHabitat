@@ -10,6 +10,8 @@ class ProjectShowcase extends Equatable {
   final List<String> technologies;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? githubUrl;
+  final String? liveUrl;
 
   const ProjectShowcase({
     required this.id,
@@ -21,6 +23,8 @@ class ProjectShowcase extends Equatable {
     required this.technologies,
     required this.createdAt,
     required this.updatedAt,
+    this.githubUrl,
+    this.liveUrl,
   });
 
   @override
@@ -34,6 +38,8 @@ class ProjectShowcase extends Equatable {
         technologies,
         createdAt,
         updatedAt,
+        githubUrl,
+        liveUrl,
       ];
 
   Map<String, dynamic> toJson() {
@@ -47,6 +53,8 @@ class ProjectShowcase extends Equatable {
       'technologies': technologies,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'githubUrl': githubUrl,
+      'liveUrl': liveUrl,
     };
   }
 
@@ -61,6 +69,8 @@ class ProjectShowcase extends Equatable {
       technologies: List<String>.from(json['technologies'] ?? []),
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
+      githubUrl: json['githubUrl'] as String?,
+      liveUrl: json['liveUrl'] as String?,
     );
   }
 }

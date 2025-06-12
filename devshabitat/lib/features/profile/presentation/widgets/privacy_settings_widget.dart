@@ -25,7 +25,7 @@ class PrivacySettingsWidget extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'Gizlilik Ayarları',
+              'Privacy Settings',
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ],
@@ -33,8 +33,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'Profil Görünürlüğü',
-          'Profilinizi herkese açık yapın',
+          'Profile Visibility',
+          'Make your profile public',
           settings.isProfilePublic,
           (value) {
             onSettingsChanged(
@@ -45,8 +45,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'E-posta Görünürlüğü',
-          'E-posta adresinizi herkese açık yapın',
+          'Email Visibility',
+          'Make your email public',
           settings.showEmail,
           (value) {
             onSettingsChanged(
@@ -57,8 +57,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'Sosyal Medya Görünürlüğü',
-          'Sosyal medya hesaplarınızı herkese açık yapın',
+          'Social Media Visibility',
+          'Make your social media accounts public',
           settings.showSocialLinks,
           (value) {
             onSettingsChanged(
@@ -69,8 +69,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'GitHub Görünürlüğü',
-          'GitHub bilgilerinizi herkese açık yapın',
+          'GitHub Visibility',
+          'Make your GitHub information public',
           settings.showGitHubStats,
           (value) {
             onSettingsChanged(
@@ -81,8 +81,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'Projeler Görünürlüğü',
-          'Projelerinizi herkese açık yapın',
+          'Projects Visibility',
+          'Make your projects public',
           settings.showProjects,
           (value) {
             onSettingsChanged(
@@ -93,8 +93,8 @@ class PrivacySettingsWidget extends StatelessWidget {
         const SizedBox(height: 16),
         _buildPrivacySwitch(
           context,
-          'Sertifikalar Görünürlüğü',
-          'Sertifikalarınızı herkese açık yapın',
+          'Certifications Visibility',
+          'Make your certifications public',
           settings.showCertifications,
           (value) {
             onSettingsChanged(

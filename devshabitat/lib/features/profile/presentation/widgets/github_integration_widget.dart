@@ -186,7 +186,7 @@ class GitHubIntegrationWidget extends StatelessWidget {
                     Icons.link,
                     size: 16,
                   ),
-                  label: const Text('Görüntüle'),
+                  label: const Text('View'),
                   style: TextButton.styleFrom(
                     foregroundColor: DevHabitatColors.primary,
                   ),

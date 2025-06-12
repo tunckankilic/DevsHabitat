@@ -11,7 +11,7 @@ class SignInWithGitHub {
     try {
       return await _authRepository.signInWithGithub();
     } catch (e) {
-      return Left(Exception('GitHub girişi başarısız: ${e.toString()}'));
+      return Left(Exception('GitHub sign in failed: ${e.toString()}'));
     }
   }
 }

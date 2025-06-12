@@ -125,19 +125,19 @@ class ProfileViewScreen extends StatelessWidget {
       children: [
         if (profile.bio != null)
           _buildSection(
-            title: 'Hakkımda',
+            title: 'About Me',
             content: profile.bio!,
           ),
         SizedBox(height: 24.h),
         if (profile.skills.isNotEmpty)
           _buildSection(
-            title: 'Yetenekler',
+            title: 'Skills',
             content: profile.skills.join(', '),
           ),
         SizedBox(height: 24.h),
         if (profile.projects.isNotEmpty)
           _buildSection(
-            title: 'Projeler',
+            title: 'Projects',
             content: profile.projects.map((p) => p.title).join('\n'),
           ),
       ],

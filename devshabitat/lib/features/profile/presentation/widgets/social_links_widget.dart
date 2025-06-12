@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:devshabitat/core/theme/dev_habitat_colors.dart';
 
 class SocialLinksWidget extends StatelessWidget {
@@ -15,65 +16,93 @@ class SocialLinksWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isTablet = constraints.maxWidth >= 768;
+        final isDesktop = constraints.maxWidth >= 1200;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(
-              Icons.link,
-              color: DevHabitatColors.primary,
+            Row(
+              children: [
+                Icon(
+                  Icons.link,
+                  size: 24.r,
+                  color: DevHabitatColors.primary,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'Sosyal Medya',
+                  style: TextStyle(
+                    fontSize: isDesktop
+                        ? 24.sp
+                        : isTablet
+                            ? 20.sp
+                            : 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: DevHabitatColors.textPrimary,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Text(
-              'Sosyal Medya',
-              style: Theme.of(context).textTheme.titleLarge,
+            SizedBox(height: 16.h),
+            _buildSocialLinkField(
+              context,
+              'GitHub',
+              'github.com/',
+              Icons.code,
+              isTablet,
+              isDesktop,
+            ),
+            SizedBox(height: 8.h),
+            _buildSocialLinkField(
+              context,
+              'LinkedIn',
+              'linkedin.com/in/',
+              Icons.work,
+              isTablet,
+              isDesktop,
+            ),
+            SizedBox(height: 8.h),
+            _buildSocialLinkField(
+              context,
+              'Twitter',
+              'twitter.com/',
+              Icons.chat,
+              isTablet,
+              isDesktop,
+            ),
+            SizedBox(height: 8.h),
+            _buildSocialLinkField(
+              context,
+              'Instagram',
+              'instagram.com/',
+              Icons.camera_alt,
+              isTablet,
+              isDesktop,
+            ),
+            SizedBox(height: 8.h),
+            _buildSocialLinkField(
+              context,
+              'Medium',
+              'medium.com/@',
+              Icons.article,
+              isTablet,
+              isDesktop,
+            ),
+            SizedBox(height: 8.h),
+            _buildSocialLinkField(
+              context,
+              'Dev.to',
+              'dev.to/',
+              Icons.computer,
+              isTablet,
+              isDesktop,
             ),
           ],
-        ),
-        const SizedBox(height: 16),
-        _buildSocialLinkField(
-          context,
-          'GitHub',
-          'github.com/',
-          Icons.code,
-        ),
-        const SizedBox(height: 8),
-        _buildSocialLinkField(
-          context,
-          'LinkedIn',
-          'linkedin.com/in/',
-          Icons.work,
-        ),
-        const SizedBox(height: 8),
-        _buildSocialLinkField(
-          context,
-          'Twitter',
-          'twitter.com/',
-          Icons.chat,
-        ),
-        const SizedBox(height: 8),
-        _buildSocialLinkField(
-          context,
-          'Instagram',
-          'instagram.com/',
-          Icons.camera_alt,
-        ),
-        const SizedBox(height: 8),
-        _buildSocialLinkField(
-          context,
-          'Medium',
-          'medium.com/@',
-          Icons.article,
-        ),
-        const SizedBox(height: 8),
-        _buildSocialLinkField(
-          context,
-          'Dev.to',
-          'dev.to/',
-          Icons.computer,
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -82,6 +111,8 @@ class SocialLinksWidget extends StatelessWidget {
     String platform,
     String prefix,
     IconData icon,
+    bool isTablet,
+    bool isDesktop,
   ) {
     final controller = TextEditingController(
       text: socialLinks[platform] ?? '',
@@ -90,66 +121,65 @@ class SocialLinksWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: DevHabitatColors.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: Colors.white.withOpacity(0.2),
         ),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.w,
+          vertical: 8.h,
         ),
         child: Row(
           children: [
             Icon(
               icon,
+              size: 24.r,
               color: DevHabitatColors.primary,
             ),
-            const SizedBox(width: 16),
+            SizedBox(width: 16.w),
             Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    platform,
-                    style: const TextStyle(
-                      color: DevHabitatColors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Text(
-                        prefix,
-                        style: const TextStyle(
+              child: readOnly
+                  ? Text(
+                      '${socialLinks[platform] ?? ''}',
+                      style: TextStyle(
+                        fontSize: isDesktop
+                            ? 16.sp
+                            : isTablet
+                                ? 14.sp
+                                : 12.sp,
+                        color: DevHabitatColors.textPrimary,
+                      ),
+                    )
+                  : TextField(
+                      controller: controller,
+                      style: TextStyle(
+                        fontSize: isDesktop
+                            ? 16.sp
+                            : isTablet
+                                ? 14.sp
+                                : 12.sp,
+                        color: DevHabitatColors.textPrimary,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: prefix,
+                        hintStyle: TextStyle(
+                          fontSize: isDesktop
+                              ? 16.sp
+                              : isTablet
+                                  ? 14.sp
+                                  : 12.sp,
                           color: DevHabitatColors.textSecondary,
                         ),
+                        border: InputBorder.none,
                       ),
-                      Expanded(
-                        child: TextField(
-                          controller: controller,
-                          enabled: !readOnly,
-                          style: TextStyle(
-                            color: DevHabitatColors.textPrimary,
-                          ),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                          ),
-                          onChanged: (value) {
-                            if (onLinkChanged != null) {
-                              onLinkChanged!(platform, value);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                      onChanged: (value) {
+                        if (onLinkChanged != null) {
+                          onLinkChanged!(platform, value);
+                        }
+                      },
+                    ),
             ),
           ],
         ),
